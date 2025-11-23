@@ -15,6 +15,9 @@ class LassoEraser(QMainWindow):
         super().__init__()
         self.setWindowTitle("Usuwanie obiektów – Lasso / Pędzel")
         self.resize(1100, 750)
+        # Flagi połączenie z SD
+        self.sd_connected = False
+        self.sd_client = None
         self.image = None
         self.mask = None
         self.history = []
@@ -92,7 +95,7 @@ class LassoEraser(QMainWindow):
     def open_settings(self):
         settings.open_settings(self)
     def save_settings(self):
-        settings.save_settings(self,dialog)
+        settings.open_settings(self)
 
 
     def open_image(self):

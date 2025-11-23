@@ -136,19 +136,49 @@ def open_settings(self):
     model_group = QGroupBox("Modele i Preprocesory")
     model_layout = QVBoxLayout()
     self.model_combo = QComboBox()
-    self.model_combo.addItem("Placeholder Model 1")
-    self.model_combo.addItem("Placeholder Model 2")
-    self.model_combo.setCurrentText(getattr(self, 'saved_model', "Placeholder Model 1"))
+    if hasattr(self, 'sd_client') and self.sd_client is not None and hasattr(self, 'saved_models'):
+        for m in self.saved_models:
+            self.model_combo.addItem(m)
+    else:
+        self.model_combo.addItem("Brak połączenia z SD")
+
     model_layout.addWidget(QLabel("Model SD:"))
     model_layout.addWidget(self.model_combo)
     self.prep_combo = QComboBox()
-    self.prep_combo.addItem("Placeholder Preprocessor 1")
-    self.prep_combo.addItem("Placeholder Preprocessor 2")
-    self.prep_combo.setCurrentText(getattr(self, 'saved_preprocessor', "Placeholder Preprocessor 1"))
+    # Wypelnia liste preprocesorów z saved_controlnets,
+    # jak nie znajdzie, to komunikat 'Brak ControlNet'.
+    if hasattr(self, 'saved_controlnets') and self.saved_controlnets:
+        for p in self.saved_controlnets:
+            self.prep_combo.addItem(p)
+        self.prep_combo.setCurrentText(getattr(self, 'saved_preprocessor', self.saved_controlnets[0]))
+    else:
+        self.prep_combo.addItem("Brak ControlNet")
+        self.prep_combo.setCurrentText(getattr(self, 'saved_preprocessor', "Brak ControlNet"))
     model_layout.addWidget(QLabel("Preprocessor:"))
     model_layout.addWidget(self.prep_combo)
     model_group.setLayout(model_layout)
     form.addRow(model_group)
+    # Połączenie z SD
+    connect_group = QGroupBox("Połączenie z SD")
+    connect_layout = QVBoxLayout()
+    self.sd_url_edit = QLineEdit(getattr(self, 'saved_sd_url', "http://127.0.0.1:7860"))
+    connect_layout.addWidget(QLabel("Adres SD API:"))
+    connect_layout.addWidget(self.sd_url_edit)
+    connect_btn = QPushButton("Połącz z SD")
+    def _connect():
+        import sd
+        url = self.sd_url_edit.text().strip() or None
+        self.status_message = getattr(self, 'status_message', None)
+        res = sd.connect_sd(window=self, url=url, timeout=4)
+        from PyQt5.QtWidgets import QMessageBox
+        if res.get('ok'):
+            QMessageBox.information(self, "Połączono", f"Znaleziono {len(res.get('models', []))} modeli.")
+        else:
+            QMessageBox.warning(self, "Błąd połączenia", f"Nie można połączyć z SD:\n{res.get('error')}")
+    connect_btn.clicked.connect(_connect)
+    connect_layout.addWidget(connect_btn)
+    connect_group.setLayout(connect_layout)
+    form.addRow(connect_group)
     # Finalizacja
     scroll.setWidget(widget)
     layout.addWidget(scroll)
@@ -168,6 +198,7 @@ def save_settings(self, dialog):
         self.saved_cfg_scale = self.cfg_slider.value() / 10
         self.saved_model = self.model_combo.currentText()
         self.saved_preprocessor = self.prep_combo.currentText()
+        self.saved_sd_url = self.sd_url_edit.text().strip()
         self.saved_prompt = self.prompt_edit.text().strip()
         self.saved_negative_prompt = self.neg_edit.text().strip()
         print("Ustawienia zapisane!")  # Dla debug
