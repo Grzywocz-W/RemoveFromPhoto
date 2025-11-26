@@ -51,7 +51,7 @@ def base64_to_pil(b64str):
     data = base64.b64decode(b64str)
     return Image.open(io.BytesIO(data)).convert("RGB")
 
-def sd_inpaint_with_controlnet(window):
+def sd_inpaint_with_controlnet(window, image_bytes: bytes = None, mask_bytes: bytes = None):
     try:
         #Pobranie parametrów z ustawień
         prompt = getattr(window, 'saved_prompt', "usuń obiekt i wypełnij tłem naturalnie")
@@ -79,14 +79,42 @@ def sd_inpaint_with_controlnet(window):
         use_random_seed = getattr(window, 'saved_use_random_seed', True)
         seed = -1 if use_random_seed else getattr(window, 'saved_seed', -1)
 
-        #Konwersja obrazów do base64
-        init_b64 = pil_to_base64(window.image)
-        mask_b64 = pil_to_base64(window.mask.convert("L"))
+        # Konwersja obrazów do base64 (możliwość podania surowych bajtów)
+        if image_bytes is not None:
+            init_b64 = base64.b64encode(image_bytes).decode('utf-8')
+        else:
+            init_b64 = pil_to_base64(window.image)
 
-  
-        masked_image = window.image.copy()
-        masked_image.putalpha(window.mask)  #maska jako alfa jako alpha
-        masked_b64 = pil_to_base64(masked_image, fmt="PNG")
+        if mask_bytes is not None:
+            # mask_bytes powinny być surowymi bajtami obrazu (png/jpg) — prześlij jako base64
+            mask_b64 = base64.b64encode(mask_bytes).decode('utf-8')
+        else:
+            mask_b64 = pil_to_base64(window.mask.convert("L"))
+
+        # obraz z kanalem alfa utworzonym z maski
+        if image_bytes is not None:
+            try:
+                init_img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
+            except Exception:
+                init_img = window.image.copy().convert("RGBA")
+        else:
+            init_img = window.image.copy().convert("RGBA")
+
+        if mask_bytes is not None:
+            try:
+                mimg = Image.open(io.BytesIO(mask_bytes)).convert("L")
+            except Exception:
+                mimg = window.mask
+        else:
+            mimg = window.mask
+
+        masked_image = init_img.copy()
+        masked_image.putalpha(mimg)
+        masked_b64 = base64.b64encode(io.BytesIO().getbuffer()).decode('utf-8')
+        # masked_b64 musi być zakodowane z masked_image
+        buf = io.BytesIO()
+        masked_image.save(buf, format="PNG")
+        masked_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
 
         #Konfiguracja ControlNet unit
         controlnet_unit = {
@@ -198,6 +226,47 @@ class SDClient:
             return [item for item in items if isinstance(item, str) and 'inpaint' in item.lower()]
         except Exception:
             return ['inpaint_only', 'inpaint_only+lama', 'none']
+
+    def inpaint_bytes(self, image_bytes: bytes, mask_bytes: bytes, **kwargs) -> Image:
+        """Metoda uruchamiająca inpainting na podstawie surowych bajtów obrazu i maski. Zwraca obiekt PIL.Image (RGB).
+
+        Parametry kwargs mogą nadpisywać wartości w payload (steps, denoising_strength, prompt itp.).
+        Metoda buduje payload podobny do sd_inpaint_with_controlnet, ale używa dostarczonych bajtów jako init/mask.
+        """
+        if image_bytes is None or mask_bytes is None:
+            raise ValueError("image_bytes and mask_bytes are required")
+
+        # domyślne minimalne wartości payload — wywołujący może je nadpisać przez kwargs
+        payload = {
+            "init_images": [base64.b64encode(image_bytes).decode('utf-8')],
+            "mask": base64.b64encode(mask_bytes).decode('utf-8'),
+            "inpaint_full_res": True,
+            "inpainting_mask_invert": 0,
+            "denoising_strength": kwargs.get('denoising_strength', 0.7),
+            "steps": kwargs.get('steps', 25),
+            "cfg_scale": kwargs.get('cfg_scale', 7.0),
+            "sampler_name": kwargs.get('sampler_name', 'DPM++ 2M Karras'),
+            "prompt": kwargs.get('prompt', 'remove object and fill naturally'),
+            "negative_prompt": kwargs.get('negative_prompt', ''),
+            "seed": kwargs.get('seed', -1),
+            "batch_size": 1,
+            "width": kwargs.get('width', None),
+            "height": kwargs.get('height', None),
+        }
+
+        # Jeśli width/height nie podane, spróbuj odczytać z bajtów obrazu
+        if payload['width'] is None or payload['height'] is None:
+            try:
+                tmp = Image.open(io.BytesIO(image_bytes))
+                payload['width'] = tmp.width
+                payload['height'] = tmp.height
+            except Exception:
+                pass
+
+        result = send_request(self.base_url, 'POST', '/sdapi/v1/img2img', json_body=payload, timeout=self.timeout * 10)
+        if isinstance(result, dict) and 'images' in result and result['images']:
+            return base64_to_pil(result['images'][0])
+        raise RuntimeError('No result returned from SD')
 
 def connect_sd(window=None, url: Optional[str] = None, timeout: int = 5) -> Dict[str, Any]:
     base = url or 'http://127.0.0.1:7860'

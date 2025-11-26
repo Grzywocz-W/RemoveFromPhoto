@@ -24,6 +24,25 @@ def pil_to_base64(img_pil, fmt="PNG"):
     img_pil.save(buf, format=fmt)
     return base64.b64encode(buf.getvalue()).decode("utf-8")
 
+
+def bytes_to_pil_image(data: bytes, mode: str = "RGB"):
+    """Konwertuje surowe bajty obrazu (np. pliki PNG/JPEG) na obiekt PIL.Image.
+
+    Zwraca obiekt PIL.Image w żądanym trybie (domyślnie RGB).
+    """
+    if data is None:
+        raise ValueError("No data provided")
+    img = Image.open(io.BytesIO(data)).convert(mode)
+    return img
+
+
+def bytes_to_mask_image(data: bytes):
+    """Konwertuje surowe bajty na maskę w skali szarości (tryb 'L')."""
+    if data is None:
+        raise ValueError("No mask data provided")
+    img = Image.open(io.BytesIO(data)).convert("L")
+    return img
+
 def base64_to_pil(b64str):
     data = base64.b64decode(b64str)
     return Image.open(io.BytesIO(data)).convert("RGB")
@@ -171,6 +190,52 @@ def open_image(self):
                 self.view.viewport().setCursor(Qt.CrossCursor)
         except Exception as e:
             QMessageBox.critical(self, "Błąd", f"Nie można otworzyć obrazu:\n{str(e)}")
+
+
+def set_image_from_bytes(self, data: bytes):
+    """Ustawia obraz aplikacji z surowych bajtów obrazu.
+
+    Jest to programowy odpowiednik funkcji open_image() (bez okna dialogowego).
+    """
+    try:
+        img = bytes_to_pil_image(data, mode="RGB")
+        if img.width == 0 or img.height == 0:
+            raise ValueError("Obraz ma nieprawidłowy rozmiar")
+        if img.width > 4096 or img.height > 4096:
+            # ciche ostrzeżenie — zachowaj minimalne zachowanie UI przy użyciu programowym
+            pass
+        self.image = img
+        self.mask = Image.new("L", self.image.size, 0)
+        self.history.clear()
+        draw_image(self)
+        if self.tool_combo.currentData() == 1:
+            self.view.viewport().setCursor(create_brush_cursor(self))
+        else:
+            self.view.viewport().setCursor(Qt.CrossCursor)
+    except Exception as e:
+
+        raise
+
+
+def set_mask_from_bytes(self, data: bytes):
+    """Ustaw aktywną maskę z surowych bajtów. Maska powinna mieć rozmiar pasujący do obrazu."""
+    if not self.image:
+        raise ValueError("Set image first before applying a mask")
+    try:
+        m = bytes_to_mask_image(data)
+        if m.size != self.image.size:
+            # spróbuj przeskalować (nearest)
+            m = m.resize(self.image.size, Image.Resampling.NEAREST)
+        self.mask = m
+        draw_image(self)
+    except Exception:
+        raise
+
+
+def set_image_and_mask_from_bytes(self, image_bytes: bytes, mask_bytes: bytes):
+    """Funkcja pomocnicza: ustawia jednocześnie obraz i maskę z dostarczonych bajtów."""
+    set_image_from_bytes(self, image_bytes)
+    set_mask_from_bytes(self, mask_bytes)
             
 def save_image(self):
     from PyQt5.QtWidgets import QFileDialog, QMessageBox

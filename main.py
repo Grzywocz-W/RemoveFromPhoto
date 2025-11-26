@@ -105,6 +105,22 @@ class LassoEraser(QMainWindow):
 
     def erase_selection(self):
         helpers.erase_selection(self)
+    def set_image_bytes(self, b: bytes):
+        """Programowy interfejs: ustaw obraz z surowych bajtów (zawartość PNG/JPG)."""
+        helpers.set_image_from_bytes(self, b)
+
+    def set_mask_bytes(self, b: bytes):
+        """Programowy interfejs: ustaw maskę z surowych bajtów (zawartość PNG/JPG)."""
+        helpers.set_mask_from_bytes(self, b)
+
+    def set_image_and_mask_bytes(self, image_b: bytes, mask_b: bytes):
+        """Programowy interfejs: ustaw jednocześnie obraz i maskę z bajtów."""
+        helpers.set_image_and_mask_from_bytes(self, image_b, mask_b)
+
+    def sd_inpaint_with_bytes(self, image_b: bytes = None, mask_b: bytes = None):
+        """Wywołaj inpainting SD, przekazując surowe bajty obrazu i/lub maski (nadpisze obraz/maskę w UI jeśli podane)."""
+        import sd
+        sd.sd_inpaint_with_controlnet(self, image_bytes=image_b, mask_bytes=mask_b)
     def _local_inpaint_and_update(self):
         helpers._local_inpaint_and_update(self)
 
