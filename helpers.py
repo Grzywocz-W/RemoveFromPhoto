@@ -201,10 +201,10 @@ def erase_selection(self):
     QApplication.processEvents()
     
     #===LOGIKA INPAINTNGU===#
-    if self.fill_combo.currentData() == 2:
+    if self.fill_combo.currentData() == 2:  # SD + ControlNet
         if self.sd_connected:
             import sd
-            sd.sd_inpaint_with_controlnet(self) #narazie nie ma !
+            sd.sd_inpaint_with_controlnet(self)
         else:
             QMessageBox.warning(self, "Info", "Najpierw połącz się z SD (Ustawienia -> Połącz z SD)")
             self.status_label.setStyleSheet(f"background: {COLORS['status_idle']}; border-radius: 10px;")
