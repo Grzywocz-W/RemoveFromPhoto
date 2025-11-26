@@ -8,6 +8,38 @@ import json
 from typing import List, Dict, Any, Optional
 from PyQt5.QtWidgets import QMessageBox
 
+
+def send_request(base_url: str, method: str, path: str, json_body: Optional[dict] = None,
+                 headers: Optional[dict] = None, timeout: int = 5) -> Any:
+    url = base_url.rstrip('/') + path
+    headers = headers.copy() if headers else {}
+    data = None
+    if json_body is not None:
+        data = json.dumps(json_body).encode('utf-8')
+        headers.setdefault('Content-Type', 'application/json')
+
+    headers.setdefault('User-Agent', 'RemoveFromPhoto SDClient/1.0')
+
+    req = urllib.request.Request(url, data=data, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            text = resp.read().decode('utf-8')
+            try:
+                return json.loads(text)
+            except json.JSONDecodeError:
+                return text
+    except urllib.error.HTTPError as e:
+        body = ''
+        try:
+            body = e.read().decode('utf-8')
+        except Exception:
+            body = ''
+        raise ConnectionError(f"HTTP error {e.code} when requesting {url}: {body or e.reason}")
+    except urllib.error.URLError as e:
+        raise ConnectionError(f"URL error when requesting {url}: {e.reason}")
+    except socket.timeout:
+        raise TimeoutError(f"Timeout after {timeout}s when requesting {url}")
+
 def pil_to_base64(img_pil, fmt="PNG"):
     buf = io.BytesIO()
     img_pil.save(buf, format=fmt)
@@ -59,7 +91,7 @@ def sd_inpaint_with_controlnet(window):
         #Konfiguracja ControlNet unit
         controlnet_unit = {
             "enabled": True,
-            "input_image": masked_b64,e
+            "input_image": masked_b64,
             "mask": "", 
             "model": controlnet_model or "control_v11p_sd15_inpaint [ebff9138]",
             "module": preprocessor,  
@@ -104,37 +136,26 @@ def sd_inpaint_with_controlnet(window):
         ###############BEGGUING USUNĄC!
         #Wysłanie żądania z loggingiem
         print("Payload wysłany do SD Forge:", json.dumps(payload, indent=2))  #debugging
-        req = urllib.request.Request(
-            url=f"{sd_url}/sdapi/v1/img2img",
-            data=json.dumps(payload).encode("utf-8"),
-            headers={"Content-Type": "application/json"}
-        )
 
-        with urllib.request.urlopen(req, timeout=600) as resp:
-            body = resp.read().decode("utf-8")
-            result = json.loads(body)
+        result = send_request(sd_url, 'POST', '/sdapi/v1/img2img', json_body=payload, timeout=600)
 
-            if "images" in result and result["images"]:
-                out_img = base64_to_pil(result["images"][0])
-                if out_img.size != window.image.size:
-                    out_img = out_img.resize(window.image.size, Image.Resampling.LANCZOS)
-                window.image = out_img
-                window.mask = Image.new("L", window.image.size, 0)
-                # Aktualizacja wyświetlania
-                if hasattr(window, 'draw_image'):
-                    window.draw_image()
-                QMessageBox.information(window, "Sukces", "Inpainting zakończony pomyślnie!")
-            else:
-                QMessageBox.critical(window, "Błąd", "Brak wyniku z SD API.")
+        if "images" in result and result["images"]:
+            out_img = base64_to_pil(result["images"][0])
+            if out_img.size != window.image.size:
+                out_img = out_img.resize(window.image.size, Image.Resampling.LANCZOS)
+            window.image = out_img
+            window.mask = Image.new("L", window.image.size, 0)
+            # Aktualizacja wyświetlania
+            if hasattr(window, 'draw_image'):
+                window.draw_image()
+            QMessageBox.information(window, "Sukces", "Inpainting zakończony pomyślnie!")
+        else:
+            QMessageBox.critical(window, "Błąd", "Brak wyniku z SD API.")
 
-    except urllib.error.HTTPError as e:
-        try:
-            err_body = e.read().decode('utf-8')
-        except Exception:
-            err_body = ''
-        QMessageBox.critical(window, "Błąd SD", f"HTTP error {e.code}: {err_body or e.reason}")
-    except urllib.error.URLError as e:
-        QMessageBox.critical(window, "Błąd SD", f"URL error: {e.reason}")
+    except ConnectionError as e:
+        QMessageBox.critical(window, "Błąd SD", str(e))
+    except TimeoutError as e:
+        QMessageBox.critical(window, "Błąd SD", str(e))
     except Exception as e:
         QMessageBox.critical(window, "Błąd SD", f"Wystąpił błąd: {str(e)}")
 
@@ -144,20 +165,10 @@ class SDClient:
         self.timeout = timeout
 
     def _get_json(self, path: str) -> Any:
-        url = f"{self.base_url}{path}"
-        req = urllib.request.Request(url, headers={"User-Agent": "RemoveFromPhoto SDClient/1.0"})
-        try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-                data = resp.read().decode('utf-8')
-                return json.loads(data)
-        except urllib.error.HTTPError as e:
-            raise ConnectionError(f"HTTP error {e.code} when requesting {url}")
-        except urllib.error.URLError as e:
-            raise ConnectionError(f"URL error when requesting {url}: {e.reason}")
-        except socket.timeout:
-            raise TimeoutError(f"Timeout after {self.timeout}s when requesting {url}")
-        except json.JSONDecodeError:
-            raise ValueError(f"Received non-JSON response from {url}")
+        res = send_request(self.base_url, 'GET', path, timeout=self.timeout)
+        if isinstance(res, str):
+            raise ValueError(f"Received non-JSON response from {self.base_url}{path}: {res}")
+        return res
 
     def list_models(self) -> List[str]:
         data = self._get_json('/sdapi/v1/sd-models')
