@@ -7,6 +7,7 @@ import cv2 as cv
 from PyQt5.QtGui import QPixmap, QPen, QColor, QBrush, QImage, QPainter, QCursor
 from PyQt5.QtCore import Qt
 from criminisi import criminisi_inpaint
+from auto_inpaint import auto_inpaint
 
 #===stałe===#
 COLORS = {
@@ -292,6 +293,8 @@ def _local_inpaint_and_update(self):
         filled = criminisi_inpaint(self.image.copy(), self.mask)
     elif id_ == 4:
         filled = telea_inpaint(self.image.copy(), self.mask)
+    elif id_ == 5:
+        filled = auto_inpaint(self.image.copy(), self.mask)
     else:
         filled = self.image.copy() #=== TZW. FALLBACK===#
     self.image = filled

@@ -217,15 +217,21 @@ def open_settings(self):
         self.control_combo.addItem("Brak ControlNet")
     model_layout.addWidget(QLabel("Model ControlNet:"))
     model_layout.addWidget(self.control_combo)
-    
+
+    #już 7 poprawka
     self.prep_combo = QComboBox()
-    if hasattr(self, 'saved_controlnets') and self.saved_controlnets:
-        for p in self.saved_controlnets:
+    if hasattr(self, 'saved_modules') and self.saved_modules:  #
+        for p in self.saved_modules:
             self.prep_combo.addItem(p)
-        self.prep_combo.setCurrentText(getattr(self, 'saved_preprocessor', self.saved_controlnets[0] if self.saved_controlnets else "inpaint"))
+        saved_prep = getattr(self, 'saved_preprocessor', 'inpaint_only')
+        if saved_prep in self.saved_modules:
+            self.prep_combo.setCurrentText(saved_prep)
+        else:
+            self.prep_combo.setCurrentText(self.saved_modules[0] if self.saved_modules else "inpaint_only")
     else:
-        self.prep_combo.addItem("Brak ControlNet")
-        self.prep_combo.setCurrentText(getattr(self, 'saved_preprocessor', "Brak ControlNet"))
+        self.prep_combo.addItem("inpaint_only")
+        self.prep_combo.setCurrentText(getattr(self, 'saved_preprocessor', "inpaint_only"))
+        
     model_layout.addWidget(QLabel("Preprocessor:"))
     model_layout.addWidget(self.prep_combo)
     
@@ -404,7 +410,12 @@ def open_settings(self):
             self.control_combo.clear()
             self.control_combo.addItems(res.get('controlnets', []) or ["Brak ControlNet"])
             self.prep_combo.clear()
-            self.prep_combo.addItems(res.get('modules', []) or ["inpaint_only"])
+            modules = res.get('modules', []) or ['inpaint_only']
+            self.prep_combo.addItems(modules)
+
+            # NIE USTAWIAŁO preprocesora
+            if hasattr(self, 'saved_preprocessor') and self.saved_preprocessor in modules:
+                self.prep_combo.setCurrentText(self.saved_preprocessor)
         else:
             QMessageBox.warning(dialog, "Błąd połączenia", f"Nie można połączyć z SD:\n{res.get('error')}")
 

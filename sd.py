@@ -79,19 +79,19 @@ def sd_inpaint_with_controlnet(window, image_bytes: bytes = None, mask_bytes: by
         use_random_seed = getattr(window, 'saved_use_random_seed', True)
         seed = -1 if use_random_seed else getattr(window, 'saved_seed', -1)
 
-        # Konwersja obrazów do base64 (możliwość podania surowych bajtów)
+        #Konwersja obrazów do base64 (możliwość podania surowych bajtów)
         if image_bytes is not None:
             init_b64 = base64.b64encode(image_bytes).decode('utf-8')
         else:
             init_b64 = pil_to_base64(window.image)
 
         if mask_bytes is not None:
-            # mask_bytes powinny być surowymi bajtami obrazu (png/jpg) — prześlij jako base64
+            #mask_bytes powinny być surowymi bajtami obrazu (png/jpg) — prześlij jako base64
             mask_b64 = base64.b64encode(mask_bytes).decode('utf-8')
         else:
             mask_b64 = pil_to_base64(window.mask.convert("L"))
 
-        # obraz z kanalem alfa utworzonym z maski
+        #obraz z kanalem alfa utworzonym z maski
         if image_bytes is not None:
             try:
                 init_img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
@@ -163,7 +163,7 @@ def sd_inpaint_with_controlnet(window, image_bytes: bytes = None, mask_bytes: by
 
         ###############BEGGUING USUNĄC!
         #Wysłanie żądania z loggingiem
-        print("Payload wysłany do SD Forge:", json.dumps(payload, indent=2))  #debugging
+        #print("Payload wysłany do SD Forge:", json.dumps(payload, indent=2))  #debugging
 
         result = send_request(sd_url, 'POST', '/sdapi/v1/img2img', json_body=payload, timeout=600)
 
@@ -173,7 +173,7 @@ def sd_inpaint_with_controlnet(window, image_bytes: bytes = None, mask_bytes: by
                 out_img = out_img.resize(window.image.size, Image.Resampling.LANCZOS)
             window.image = out_img
             window.mask = Image.new("L", window.image.size, 0)
-            # Aktualizacja wyświetlania
+            #Aktualizacja wyświetlania
             if hasattr(window, 'draw_image'):
                 window.draw_image()
             QMessageBox.information(window, "Sukces", "Inpainting zakończony pomyślnie!")
@@ -236,7 +236,6 @@ class SDClient:
         if image_bytes is None or mask_bytes is None:
             raise ValueError("image_bytes and mask_bytes are required")
 
-        # domyślne minimalne wartości payload — wywołujący może je nadpisać przez kwargs
         payload = {
             "init_images": [base64.b64encode(image_bytes).decode('utf-8')],
             "mask": base64.b64encode(mask_bytes).decode('utf-8'),
@@ -254,7 +253,7 @@ class SDClient:
             "height": kwargs.get('height', None),
         }
 
-        # Jeśli width/height nie podane, spróbuj odczytać z bajtów obrazu
+        #Jeśli width/height nie podane, spróbuj odczytać z bajtów obrazu
         if payload['width'] is None or payload['height'] is None:
             try:
                 tmp = Image.open(io.BytesIO(image_bytes))

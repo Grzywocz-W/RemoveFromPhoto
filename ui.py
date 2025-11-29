@@ -63,7 +63,7 @@ def setup_ui(self):
     self.tool_combo = QComboBox()
     self.tool_combo.addItem("Lasso", 0)
     self.tool_combo.addItem("Pędzel", 1)
-    self.tool_combo.setCurrentIndex(0)
+    self.tool_combo.setCurrentIndex(1)
     self.tool_combo.setStyleSheet("""
         QComboBox {
             color: white;
@@ -106,6 +106,7 @@ def setup_ui(self):
     self.fill_combo.addItem("SD + ControlNet", 2)
     self.fill_combo.addItem("Criminisi", 3)
     self.fill_combo.addItem("Telea", 4)
+    self.fill_combo.addItem("Auto", 5) 
     self.fill_combo.setCurrentIndex(0)
     self.fill_combo.setStyleSheet("""
         QComboBox {
@@ -161,7 +162,7 @@ def setup_ui(self):
     self.brush_value_label.setStyleSheet("color: white; min-width: 30px;")
     brush_layout.addWidget(self.brush_value_label)
     self.brush_slider = QSlider(Qt.Horizontal)
-    self.brush_slider.setRange(3, 50)
+    self.brush_slider.setRange(3, 100)
     self.brush_slider.setValue(10)
     self.brush_slider.valueChanged.connect(self.on_brush_size_changed)
     brush_layout.addWidget(self.brush_slider)

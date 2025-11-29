@@ -31,6 +31,9 @@ class LassoEraser(QMainWindow):
         self.brush_update_counter = 0
 
         #Miejsce na integracje z SD API->
+
+        self.saved_preprocessor = 'inpaint_only'
+        self.saved_modules = ['inpaint_only', 'inpaint_only+lama', 'none']
         #zrobiłem osobny plik sd.py
         
         self.setup_ui()
