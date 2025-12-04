@@ -61,6 +61,7 @@ class LassoEraser(QMainWindow):
                 mouseReleaseEvent(self, event)
                 return True
         return super().eventFilter(source, event)
+
     def enterEvent(self, event):
         enterEvent_logic(self, event) #===Delagat logiki===#
         super().enterEvent(event)
@@ -79,6 +80,9 @@ class LassoEraser(QMainWindow):
         self.tool_combo.setCurrentIndex(1)
         self.on_tool_changed()
 
+
+    # ===Odnośniki do funkcji z HELPERS===
+
     def draw_image(self):
         helpers.draw_image(self)
     def update_brush_mask(self, x, y, update_display=False):
@@ -92,6 +96,7 @@ class LassoEraser(QMainWindow):
         helpers.update_scale(self, val)
     def on_tool_changed(self, index=None):
         helpers.on_tool_changed(self, index)
+
 
 
     # Settings

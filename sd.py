@@ -267,6 +267,7 @@ class SDClient:
             return base64_to_pil(result['images'][0])
         raise RuntimeError('No result returned from SD')
 
+
 def connect_sd(window=None, url: Optional[str] = None, timeout: int = 5) -> Dict[str, Any]:
     base = url or 'http://127.0.0.1:7860'
     client = SDClient(base_url=base, timeout=timeout)
