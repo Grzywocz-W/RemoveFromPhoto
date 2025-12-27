@@ -1,0 +1,75 @@
+Eliminación de objetos – Lazo / Pincel
+Herramienta:
+Lazo
+Pincel
+Método de relleno:
+Vecindad (Neighbor)
+Vacío (Blanco)
+SD + ControlNet
+Criminisi
+Telea
+Auto
+Abrir imagen
+Borrar y rellenar
+Guardar imagen
+Reiniciar selección
+Deshacer
+Ajustes
+Tamaño del pincel
+Escala %
+Ajustes de SD + ControlNet
+Configuración de SD
+Prompt:
+Negative Prompt:
+Parámetros Stable Diffusion
+Pasos (Steps)
+Fuerza de eliminación de ruido (Denoising)
+Escala CFG
+Configuración de semilla (Seed)
+Semilla aleatoria
+Semilla:
+Modelos y Preprocesadores
+Sin conexión a SD
+Modelo SD:
+Sin ControlNet
+Modelo ControlNet:
+Preprocesador:
+ControlNet - Avanzado
+Peso de control (Weight)
+Inicio de guía (Guidance Start)
+Fin de guía (Guidance End)
+Resolución (Preprocessor Res)
+Umbral A (Threshold A)
+Umbral B (Threshold B)
+Modo de control (Control Mode):
+Equilibrado
+Mi prompt es más importante
+ControlNet es más importante
+Modo de redimensionado (Resize):
+Solo cambiar tamaño
+Recortar y cambiar tamaño
+Cambiar tamaño y rellenar
+Pixel Perfect
+Bajo consumo VRAM (Low VRAM)
+Otras opciones
+Añadir marca de tiempo al nombre
+Conexión con SD
+URL de API SD:
+Conectar
+No se encontraron modelos
+Guardar ajustes
+Conectado
+Encontrados: {} modelos, {} ControlNets, {} módulos.
+Error de conexión
+No se pudo conectar a SD: {}
+OK
+¡Ajustes guardados!
+Error
+Error al guardar ajustes: {}
+Éxito
+¡Inpainting finalizado con éxito!
+Sin resultado de la API SD.
+Error SD
+Ocurrió un error: {}
+eliminar objeto, rellenar con fondo natural
+baja calidad, borroso, artefactos

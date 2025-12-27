@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import pyqtSlot, QEvent
+from PyQt5.QtWidgets import QMessageBox
+import os
 
 #===IMPORTY Z INNYCH PLIKÓW===#
 import helpers
@@ -162,7 +164,6 @@ class LassoEraser(QMainWindow):
 if __name__ == "__main__":
     #przed startem, sprawdzi czy mamy wszystkie biblioteki
     try:
-        import first_launch
         first_launch.check_dependencies()
     except Exception as e:
         print(f"Błąd sprawdzania biblioteki biblioteki: {e}")
@@ -173,8 +174,19 @@ if __name__ == "__main__":
     window = LassoEraser()
     window.show()
 
-    import file_configurator
+    #import file_configurator
     file_configurator.load_from_file(window)
+
+    try:
+        saved_lang = getattr(window, 'current_lang_file', "ENG_RFP.txt")
+        file_configurator.language_version(window, saved_lang)
+    except Exception as e:
+        QMessageBox.critical(window, "Error", f"Error with language pack {e}")
+        file_configurator.language_version(window, "ENG_RFP.txt")
+
+
+
+    
     
     sys.exit(app.exec_())
     

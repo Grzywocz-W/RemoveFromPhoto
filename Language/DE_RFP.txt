@@ -1,0 +1,75 @@
+Objektentfernung – Lasso / Pinsel
+Werkzeug:
+Lasso
+Pinsel
+Füllmethode:
+Nachbarschaft (Neighbor)
+Leer (Weiß)
+SD + ControlNet
+Criminisi
+Telea
+Auto
+Bild öffnen
+Entfernen & Füllen
+Bild speichern
+Auswahl zurücksetzen
+Rückgängig
+Einstellungen
+Pinselgröße
+Skalierung %
+SD + ControlNet Einstellungen
+SD-Konfiguration
+Prompt:
+Negative Prompt:
+Stable Diffusion Parameter
+Schritte (Steps)
+Entrauschungsstärke (Denoising)
+CFG-Skala
+Seed-Einstellungen
+Zufälliger Seed
+Seed:
+Modelle & Präprozessoren
+Keine Verbindung zu SD
+SD-Modell:
+Kein ControlNet
+ControlNet-Modell:
+Präprozessor:
+ControlNet - Erweitert
+Steuerungsgewichtung (Weight)
+Führungsstart (Guidance Start)
+Führungsende (Guidance End)
+Auflösung (Preprocessor Res)
+Schwellenwert A (Threshold A)
+Schwellenwert B (Threshold B)
+Steuerungsmodus (Control Mode):
+Ausgewogen (Balanced)
+Mein Prompt ist wichtiger
+ControlNet ist wichtiger
+Größenänderungsmodus (Resize):
+Nur Größe ändern
+Zuschneiden & Ändern
+Ändern & Füllen
+Pixel Perfect
+Wenig VRAM (Low VRAM)
+Andere Optionen
+Zeitstempel zum Dateinamen hinzufügen
+Verbindung mit SD
+SD API URL:
+Verbinden
+Keine Modelle gefunden
+Einstellungen speichern
+Verbunden
+Gefunden: {} Modelle, {} ControlNets, {} Module.
+Verbindungsfehler
+Konnte nicht mit SD verbinden: {}
+OK
+Einstellungen gespeichert!
+Fehler
+Fehler beim Speichern der Einstellungen: {}
+Erfolg
+Inpainting erfolgreich abgeschlossen!
+Kein Ergebnis von SD API.
+SD-Fehler
+Ein Fehler ist aufgetreten: {}
+objekt entfernen, hintergrund natürlich füllen
+niedrige qualität, unscharf, artefakte

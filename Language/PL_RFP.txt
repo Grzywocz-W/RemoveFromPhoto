@@ -1,0 +1,75 @@
+Usuwanie obiektów – Lasso / Pędzel
+Narzędzie:
+Lasso
+Pędzel
+Metoda wypełniania:
+Sąsiedztwo (Neighbor)
+Puste (Biel)
+SD + ControlNet
+Criminisi
+Telea
+Auto
+Otwórz obraz
+Usuń i wypełnij
+Zapisz obraz
+Resetuj zaznaczenie
+Cofnij
+Ustawienia
+Rozmiar pędzla
+Skala %
+Ustawienia SD + ControlNet
+Konfiguracja SD
+Prompt:
+Negative Prompt:
+Parametry Stable Diffusion
+Liczba kroków (Steps)
+Siła odszumiania (Denoising)
+Skala CFG
+Ustawienia ziarna (Seed)
+Losowy seed
+Seed:
+Modele i Preprocesory
+Brak połączenia z SD
+Model SD:
+Brak ControlNet
+Model ControlNet:
+Preprocesor:
+ControlNet - Zaawansowane
+Waga kontroli (Weight)
+Początek wpływu (Guidance Start)
+Koniec wpływu (Guidance End)
+Rozdzielczość (Preprocessor Res)
+Próg A (Threshold A)
+Próg B (Threshold B)
+Tryb kontroli (Control Mode):
+Zbalansowany
+Mój prompt jest ważniejszy
+ControlNet jest ważniejszy
+Tryb zmiany rozmiaru (Resize):
+Tylko zmień rozmiar
+Przytnij i zmień rozmiar
+Zmień rozmiar i wypełnij
+Pixel Perfect
+Niskie zużycie VRAM (Low VRAM)
+Inne opcje
+Dodaj znacznik czasu do nazwy pliku
+Połączenie z SD
+Adres API SD:
+Połącz
+Nie znaleziono modeli
+Zapisz ustawienia
+Połączono
+Znaleziono {} modeli, {} ControlNet, {} modułów.
+Błąd połączenia
+Nie udało się połączyć z SD: {}
+OK
+Ustawienia zapisane!
+Błąd
+Błąd zapisu ustawień: {}
+Sukces
+Inpainting zakończony pomyślnie!
+Brak wyniku z API SD.
+Błąd SD
+Wystąpił błąd: {}
+usuń obiekt, wypełnij tłem naturalnie
+niska jakość, rozmycie, artefakty

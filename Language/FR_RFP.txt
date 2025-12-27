@@ -1,0 +1,75 @@
+Suppression d'objets – Lasso  Pinceau
+Outil 
+Lasso
+Pinceau
+Méthode de remplissage 
+Voisinage (Neighbor)
+Vide (Blanc)
+SD + ControlNet
+Criminisi
+Telea
+Auto
+Ouvrir image
+Effacer & Remplir
+Enregistrer image
+Réinitialiser sélection
+Annuler
+Paramètres
+Taille du pinceau
+Échelle %
+Paramètres SD + ControlNet
+Configuration SD
+Prompt 
+Negative Prompt 
+Paramètres Stable Diffusion
+Étapes (Steps)
+Force de débruitage (Denoising)
+Échelle CFG
+Paramètres de graine (Seed)
+Graine aléatoire
+Graine 
+Modèles et Préprocesseurs
+Pas de connexion SD
+Modèle SD 
+Pas de ControlNet
+Modèle ControlNet 
+Préprocesseur 
+ControlNet - Avancé
+Poids du contrôle (Weight)
+Début du guidage (Guidance Start)
+Fin du guidage (Guidance End)
+Résolution (Preprocessor Res)
+Seuil A (Threshold A)
+Seuil B (Threshold B)
+Mode de contrôle (Control Mode) 
+Équilibré
+Mon prompt est prioritaire
+ControlNet est prioritaire
+Mode de redimensionnement (Resize) 
+Juste redimensionner
+Recadrer et redimensionner
+Redimensionner et remplir
+Pixel Perfect
+Faible VRAM (Low VRAM)
+Autres options
+Ajouter l'horodatage au nom de fichier
+Connexion SD
+URL API SD 
+Connecter
+Aucun modèle trouvé
+Enregistrer les paramètres
+Connecté
+Trouvé  {} modèles, {} ControlNets, {} modules.
+Erreur de connexion
+Impossible de se connecter à SD  {}
+OK
+Paramètres enregistrés !
+Erreur
+Erreur lors de l'enregistrement  {}
+Succès
+Inpainting terminé avec succès !
+Aucun résultat de l'API SD.
+Erreur SD
+Une erreur est survenue  {}
+supprimer l'objet, remplir avec fond naturel
+basse qualité, flou, artefacts

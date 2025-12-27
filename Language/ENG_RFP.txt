@@ -1,0 +1,75 @@
+Object Removal – Lasso / Brush
+Tool:
+Lasso
+Brush
+Filling:
+Neighbor
+Empty
+SD + ControlNet
+Criminisi
+Telea
+Auto
+Open
+Erase & Fill
+Save
+Reset
+Undo
+Settings
+Brush Size
+Scale %
+SD + ControlNet Settings
+SD Settings
+Prompt:
+Negative Prompt:
+Stable Diffusion Parameters
+Steps
+Denoising
+CFG Scale
+Seed
+Random seed
+Seed:
+Models & Preprocessors
+No connection to SD
+SD Model:
+No ControlNet
+ControlNet Model:
+Preprocessor:
+ControlNet - Advanced
+Control Weight
+Guidance Start
+Guidance End
+Processor Res
+Threshold A
+Threshold B
+Control Mode:
+Balanced
+My prompt is more important
+ControlNet is more important
+Resize Mode:
+Just Resize
+Crop and Resize
+Resize and Fill
+Pixel Perfect
+Low VRAM
+Other options
+Add timestamp to filename
+Connection to SD
+SD API Address:
+Connect to SD
+No models
+Save settings
+Connected
+Found {} models, {} ControlNets, {} modules.
+Connection Error
+Could not connect to SD: {}
+OK
+Settings saved!
+Error
+Error saving settings: {}
+Success
+Inpainting completed successfully!
+No result from SD API.
+SD Error
+An error occurred: {}
+remove object and fill naturally with background
+low quality, blurry, artifacts

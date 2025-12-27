@@ -94,11 +94,10 @@ def setup_ui(self):
     """)
     #self.addToolBar(toolbar)
     self.addToolBar(Qt.LeftToolBarArea, toolbar)
-    #===LABEL===#
     label_style = "color: white; font-size: 12pt; font-weight: bold;"
-    tool_label = QLabel("Narzędzie:")
-    tool_label.setStyleSheet(label_style)
-    toolbar.addWidget(tool_label)
+    self.tool_label = QLabel("Narzędzie:") 
+    self.tool_label.setStyleSheet(label_style)
+    toolbar.addWidget(self.tool_label)
     #===COMBOBOX Z WYBOREM===#
     self.tool_combo = QComboBox()
     self.tool_combo.addItem("Lasso", 0)
@@ -138,9 +137,9 @@ def setup_ui(self):
     toolbar.addWidget(self.tool_combo)
     toolbar.addSeparator()
     #===WYPEŁNIENIE===#
-    fill_label = QLabel("Wypełnienie:")
-    fill_label.setStyleSheet(label_style)
-    toolbar.addWidget(fill_label)
+    self.fill_label = QLabel("Wypełnienie:")
+    self.fill_label.setStyleSheet(label_style)
+    toolbar.addWidget(self.fill_label)
     #===RODZAJE WYPEŁNIENIA===#
     self.fill_combo = QComboBox()
     self.fill_combo.addItem("Sąsiedztwo", 0)
@@ -184,18 +183,44 @@ def setup_ui(self):
     toolbar.addSeparator()
 
     #===BUTTONY ===#
-    actions = [
-        ("Otwórz", self.open_image),
-        ("Usuń i wypełnij", self.erase_selection),
-        ("Zapisz", self.save_image),
-        ("Reset", self.reset_selection),
-        ("Cofnij", self.undo),
-        ("Ustawienia", self.open_settings)
-    ]
-    for text, func in actions:
-        btn = RoundedButton(text)
-        btn.clicked.connect(func)
-        toolbar.addWidget(btn)
+##    actions = [
+##        ("Otwórz", self.open_image),
+##        ("Usuń i wypełnij", self.erase_selection),
+##        ("Zapisz", self.save_image),
+##        ("Reset", self.reset_selection),
+##        ("Cofnij", self.undo),
+##        ("Ustawienia", self.open_settings)
+##    ]
+##    for text, func in actions:
+##        btn = RoundedButton(text)
+##        btn.clicked.connect(func)
+##        toolbar.addWidget(btn)
+
+
+    
+    self.btn_open = RoundedButton("Otwórz")
+    self.btn_open.clicked.connect(self.open_image)
+    toolbar.addWidget(self.btn_open)
+
+    self.btn_erase = RoundedButton("Usuń i wypełnij")
+    self.btn_erase.clicked.connect(self.erase_selection)
+    toolbar.addWidget(self.btn_erase)
+
+    self.btn_save = RoundedButton("Zapisz")
+    self.btn_save.clicked.connect(self.save_image)
+    toolbar.addWidget(self.btn_save)
+
+    self.btn_reset = RoundedButton("Reset")
+    self.btn_reset.clicked.connect(self.reset_selection)
+    toolbar.addWidget(self.btn_reset)
+
+    self.btn_undo = RoundedButton("Cofnij")
+    self.btn_undo.clicked.connect(self.undo)
+    toolbar.addWidget(self.btn_undo)
+
+    self.btn_settings = RoundedButton("Ustawienia")
+    self.btn_settings.clicked.connect(self.open_settings)
+    toolbar.addWidget(self.btn_settings)
 
 ##    #===SUWAK PĘDZLNA===#
 ##    brush_container = QWidget()

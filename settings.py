@@ -1,131 +1,280 @@
 import sys
+import os #dla obsługi języków
 from PyQt5.QtWidgets import (QDialog, QVBoxLayout, QGroupBox, QFormLayout, 
     QScrollArea, QLineEdit, QLabel, QWidget, QHBoxLayout, QComboBox, 
     QSlider, QPushButton, QCheckBox, QButtonGroup, QRadioButton, QMessageBox)
 from PyQt5.QtCore import Qt
-
+from PyQt5.QtWidgets import QMessageBox
 import file_configurator
+from file_configurator import LangKeys
 
 def open_settings(self):
     dialog = QDialog(self)
     dialog.setWindowTitle("Ustawienia SD + ControlNet")
     dialog.resize(680, 750)
+
+    lang = getattr(self, 'lang_data', None)# z pliku_file_configurator
+
+    if not lang:
+        print("file_configurator is null")
+        return
+
+    dialog = QDialog(self)
+    dialog.setWindowTitle(lang[LangKeys.SETTINGS_TITLE].strip()) # "Ustawienia SD + ControlNet"
+    dialog.resize(680, 750)
     
     # --- CIEMNY MOTYW ---
+##    dialog.setStyleSheet("""
+##        QDialog {
+##            background-color: #1e1e1e;
+##            color: white;
+##            padding: 0;
+##            margin: 0;
+##        }
+##        QScrollArea {
+##            background-color: #1e1e1e;
+##            border: none;
+##        }
+##        QScrollArea > QWidget {
+##            background-color: #1e1e1e;
+##            margin: 0;
+##        }
+##        QGroupBox {
+##            font-weight: bold;
+##            border: 1px solid #444;
+##            border-radius: 6px;
+##            margin: 0;
+##            padding-top: 10px;
+##            background-color: #2d2d2d;
+##        }
+##        QGroupBox::title {
+##            subcontrol-origin: margin;
+##            subcontrol-position: top left;
+##            padding: 0 8px;
+##            color: #FFD700;
+##            font-size: 14pt;
+##        }
+##        QFormLayout {
+##            margin: 5px;
+##            spacing: 5px;
+##        }
+##        QLineEdit, QComboBox {
+##            background-color: #333;
+##            color: white;
+##            border: 1px solid #555;
+##            padding: 4px;
+##            border-radius: 4px;
+##        }
+##        QCheckBox, QRadioButton {
+##            color: white;
+##        }
+##        QLabel {
+##            color: white;
+##        }
+##        QSlider::groove:horizontal {
+##            border: 1px solid #444;
+##            height: 8px;
+##            background: #333;
+##            margin: 2px 0;
+##            border-radius: 4px;
+##        }
+##        QSlider::handle:horizontal {
+##            background: #FFD700;
+##            border: 1px solid #AAA;
+##            width: 16px;
+##            margin: -4px 0;
+##            border-radius: 8px;
+##        }
+##        QPushButton {
+##            background: qlineargradient(
+##                x1:0, y1:0, x2:1, y2:1,
+##                stop:0 #667eea,
+##                stop:1 #764ba2
+##            );
+##            color: white;
+##            border-radius: 8px;
+##            padding: 8px 16px;
+##            font-weight: bold;
+##            border: none;
+##        }
+##        QPushButton:hover {
+##            background: qlineargradient(
+##                x1:0, y1:0, x2:1, y2:1,
+##                stop:0 #7b93f7,
+##                stop:1 #8a5cb8
+##            );
+##        }
+##        QPushButton:pressed {
+##            background: qlineargradient(
+##                x1:0, y1:0, x2:1, y2:1,
+##                stop:0 #5568d3,
+##                stop:1 #643a8e
+##            );
+##        }
+##    """)
+
     dialog.setStyleSheet("""
-        QDialog {
-            background-color: #1e1e1e;
-            color: white;
-            padding: 0;
-            margin: 0;
-        }
-        QScrollArea {
-            background-color: #1e1e1e;
-            border: none;
-        }
-        QScrollArea > QWidget {
-            background-color: #1e1e1e;
-            margin: 0;
-        }
-        QGroupBox {
-            font-weight: bold;
-            border: 1px solid #444;
-            border-radius: 6px;
-            margin: 0;
-            padding-top: 10px;
-            background-color: #2d2d2d;
-        }
-        QGroupBox::title {
-            subcontrol-origin: margin;
-            subcontrol-position: top left;
-            padding: 0 8px;
-            color: #FFD700;
-            font-size: 14pt;
-        }
-        QFormLayout {
-            margin: 5px;
-            spacing: 5px;
-        }
-        QLineEdit, QComboBox {
-            background-color: #333;
-            color: white;
-            border: 1px solid #555;
-            padding: 4px;
-            border-radius: 4px;
-        }
-        QCheckBox, QRadioButton {
-            color: white;
-        }
-        QLabel {
-            color: white;
-        }
-        QSlider::groove:horizontal {
-            border: 1px solid #444;
-            height: 8px;
-            background: #333;
-            margin: 2px 0;
-            border-radius: 4px;
-        }
-        QSlider::handle:horizontal {
-            background: #FFD700;
-            border: 1px solid #AAA;
-            width: 16px;
-            margin: -4px 0;
-            border-radius: 8px;
-        }
-        QPushButton {
-            background: qlineargradient(
-                x1:0, y1:0, x2:1, y2:1,
-                stop:0 #667eea,
-                stop:1 #764ba2
-            );
-            color: white;
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-weight: bold;
-            border: none;
-        }
-        QPushButton:hover {
-            background: qlineargradient(
-                x1:0, y1:0, x2:1, y2:1,
-                stop:0 #7b93f7,
-                stop:1 #8a5cb8
-            );
-        }
-        QPushButton:pressed {
-            background: qlineargradient(
-                x1:0, y1:0, x2:1, y2:1,
-                stop:0 #5568d3,
-                stop:1 #643a8e
-            );
-        }
-    """)
+            QDialog { 
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:1,
+                    stop:0 #141E30,
+                    stop:1 #243B55
+                );
+                color: #e0e0e0; 
+            }
+            QScrollArea { 
+                background: transparent; 
+                border: none; 
+            }
+            QScrollArea > QWidget > QWidget { 
+                background: transparent; 
+            }
+            QGroupBox { 
+                font-weight: bold; 
+                border: 1px solid #4a5b70; 
+                border-radius: 8px; 
+                margin-top: 15px; 
+                background-color: rgba(30, 30, 30, 150);
+                padding-top: 15px;
+            }
+            QGroupBox::title { 
+                subcontrol-origin: margin; 
+                subcontrol-position: top left; 
+                left: 15px;
+                padding: 0 5px; 
+                color: #5CA9FF; 
+                font-size: 11pt;
+                background-color: transparent; 
+            }
+            QLineEdit, QComboBox { 
+                background-color: #2b2b2b; 
+                color: white; 
+                border: 1px solid #555; 
+                padding: 6px; 
+                border-radius: 5px; 
+            }
+            QComboBox::drop-down { border: 0; width: 25px; }
+            QCheckBox, QRadioButton, QLabel { 
+                color: #e0e0e0; 
+                font-size: 10pt;
+                background: transparent;
+            }
+            QSlider::groove:horizontal { 
+                border: 1px solid #444; 
+                height: 6px; 
+                background: #222; 
+                margin: 2px 0; 
+                border-radius: 3px; 
+            }
+            QSlider::sub-page:horizontal {
+                background: #5CA9FF;
+                border-radius: 3px;
+            }
+            QSlider::handle:horizontal { 
+                background: #ffffff; 
+                border: 1px solid #5CA9FF; 
+                width: 14px; 
+                height: 14px; 
+                margin: -5px 0; 
+                border-radius: 7px; 
+            }
+            QPushButton { 
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:1,
+                    stop:0 #667eea,
+                    stop:1 #764ba2
+                );
+                color: white; 
+                border-radius: 8px; 
+                padding: 8px 16px; 
+                font-weight: bold; 
+                border: none;
+            }
+            QPushButton:hover { 
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:1,
+                    stop:0 #7b93f7,
+                    stop:1 #8a5cb8
+                );
+            }
+            QPushButton:pressed { 
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:1,
+                    stop:0 #5568d3,
+                    stop:1 #643a8e
+                );
+            }
+            QScrollBar:vertical {
+                border: none;
+                background: #1e1e1e;
+                width: 10px;
+            }
+            QScrollBar::handle:vertical {
+                background: #555;
+                min-height: 20px;
+                border-radius: 5px;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                height: 0px;
+            }
+        """)
     
     layout = QVBoxLayout()
     layout.setContentsMargins(0, 0, 0, 0)
+    
     scroll = QScrollArea()
     scroll.setWidgetResizable(True)
-    widget = QGroupBox("Ustawienia SD")
+    
+    main_widget = QWidget()
+    main_layout = QVBoxLayout(main_widget)
+    main_layout.setContentsMargins(10, 10, 10, 10)
+
+    #--------Języki-------#
+    lang_group = QGroupBox("Language / Język")
+    lang_layout_box = QVBoxLayout()
+    
+    self.settings_lang_combo = QComboBox()
+    
+    load_language_files(self.settings_lang_combo)
+
+    current_lang = getattr(self, 'current_lang_file', "ENG_RFP.txt")
+    
+    index = self.settings_lang_combo.findData(current_lang)
+    
+    if index >= 0:
+        self.settings_lang_combo.setCurrentIndex(index)
+
+    self.settings_lang_combo.currentIndexChanged.connect(lambda: change_language_on_selection(self))
+
+    
+    
+    lang_layout_box.addWidget(self.settings_lang_combo)
+    lang_group.setLayout(lang_layout_box)
+    
+    main_layout.addWidget(lang_group)
+
+    widget = QGroupBox(lang[LangKeys.GRP_SD_SETTINGS].strip())
     form = QFormLayout(widget)
     form.setContentsMargins(10, 10, 10, 10)
+
     
     #Prompt i Negative Prompt
-    self.prompt_edit = QLineEdit(getattr(self, 'saved_prompt', "usuń obiekt i wypełnij tłem naturalnie"))
+    self.prompt_edit = QLineEdit(getattr(self, 'saved_prompt', lang[LangKeys.DEFAULT_PROMPT].strip()))
     form.addRow("Prompt:", self.prompt_edit)
-    self.neg_edit = QLineEdit(getattr(self, 'saved_negative_prompt', "niska jakość, rozmycie, artefakty"))
+    self.neg_edit = QLineEdit(getattr(self, 'saved_negative_prompt', lang[LangKeys.DEFAULT_NEG_PROMPT]))
     form.addRow("Negative Prompt:", self.neg_edit)
     
 
     #------Parametry Stable Diffusion----#
 
-    sd_group = QGroupBox("Parametry Stable Diffusion")
+    sd_group = QGroupBox(lang[LangKeys.GRP_SD_PARAMS].strip())
     sd_layout = QVBoxLayout()
     
     # --- Kroki ---#
     steps_container = QWidget()
     steps_layout = QHBoxLayout(steps_container)
     steps_layout.setContentsMargins(0, 0, 0, 0)
-    steps_label = QLabel("Kroki")
+    steps_label = QLabel(lang[LangKeys.LBL_STEPS].strip())
     steps_layout.addWidget(steps_label)
     self.steps_value = QLabel(str(getattr(self, 'saved_steps', 25)))
     self.steps_value.setStyleSheet("min-width: 30px; color: white;")
@@ -141,7 +290,7 @@ def open_settings(self):
     denoise_container = QWidget()
     denoise_layout = QHBoxLayout(denoise_container)
     denoise_layout.setContentsMargins(0, 0, 0, 0)
-    denoise_label = QLabel("Denoising")
+    denoise_label = QLabel(lang[LangKeys.LBL_DENOISING].strip())
     denoise_layout.addWidget(denoise_label)
     self.denoise_value = QLabel(f"{getattr(self, 'saved_denoising', 0.7):.2f}")
     self.denoise_value.setStyleSheet("min-width: 40px; color: white;")
@@ -175,17 +324,17 @@ def open_settings(self):
 
     #----Seed----#
 
-    seed_group = QGroupBox("Seed")
+    seed_group = QGroupBox(lang[LangKeys.GRP_SEED].strip())
     seed_layout = QVBoxLayout()
     seed_container = QWidget()
     seed_h_layout = QHBoxLayout(seed_container)
     seed_h_layout.setContentsMargins(0, 0, 0, 0)
-    self.random_seed_cb = QCheckBox("Losowy seed")
+    self.random_seed_cb = QCheckBox(lang[LangKeys.CB_RANDOM_SEED].strip())
     self.random_seed_cb.setChecked(getattr(self, 'saved_use_random_seed', True))
     seed_h_layout.addWidget(self.random_seed_cb)
     self.seed_edit = QLineEdit(str(getattr(self, 'saved_seed', -1)))
     self.seed_edit.setMaximumWidth(150)
-    seed_h_layout.addWidget(QLabel("Seed:"))
+    seed_h_layout.addWidget(QLabel(lang[LangKeys.LBL_SEED].strip()))
     seed_h_layout.addWidget(self.seed_edit)
     seed_h_layout.addStretch()
     seed_layout.addWidget(seed_container)
@@ -195,7 +344,7 @@ def open_settings(self):
     # ==============================
     # Modele i Preprocesory
 
-    model_group = QGroupBox("Modele i Preprocesory")
+    model_group = QGroupBox(lang[LangKeys.GRP_MODELS].strip())
     model_layout = QVBoxLayout()
     
     self.model_combo = QComboBox()
@@ -205,8 +354,8 @@ def open_settings(self):
         if hasattr(self, 'saved_model'):
             self.model_combo.setCurrentText(self.saved_model)
     else:
-        self.model_combo.addItem("Brak połączenia z SD")
-    model_layout.addWidget(QLabel("Model SD:"))
+        self.model_combo.addItem(lang[LangKeys.COMBO_NO_CONNECTION].strip())
+    model_layout.addWidget(QLabel(lang[LangKeys.LBL_SD_MODEL].strip()))
     model_layout.addWidget(self.model_combo)
     
     self.control_combo = QComboBox()
@@ -216,8 +365,8 @@ def open_settings(self):
         if hasattr(self, 'saved_controlnet_model'):
             self.control_combo.setCurrentText(self.saved_controlnet_model)
     else:
-        self.control_combo.addItem("Brak ControlNet")
-    model_layout.addWidget(QLabel("Model ControlNet:"))
+        self.control_combo.addItem(lang[LangKeys.COMBO_NO_CONTROLNET].strip())
+    model_layout.addWidget(QLabel(lang[LangKeys.LBL_CN_MODEL].strip()))
     model_layout.addWidget(self.control_combo)
 
     #już 7 poprawka
@@ -234,7 +383,7 @@ def open_settings(self):
         self.prep_combo.addItem("inpaint_only")
         self.prep_combo.setCurrentText(getattr(self, 'saved_preprocessor', "inpaint_only"))
         
-    model_layout.addWidget(QLabel("Preprocessor:"))
+    model_layout.addWidget(QLabel(lang[LangKeys.LBL_PREPROCESSOR].strip()))
     model_layout.addWidget(self.prep_combo)
     
     model_group.setLayout(model_layout)
@@ -243,14 +392,14 @@ def open_settings(self):
     # ==============================
     # ControlNet
 
-    cn_group = QGroupBox("ControlNet - Zaawansowane")
+    cn_group = QGroupBox(lang[LangKeys.GRP_CN_ADV].strip())
     cn_layout = QVBoxLayout()
     
     # --- Control Weight ---#
     weight_container = QWidget()
     weight_layout = QHBoxLayout(weight_container)
     weight_layout.setContentsMargins(0, 0, 0, 0)
-    weight_label = QLabel("Control Weight")
+    weight_label = QLabel(lang[LangKeys.LBL_WEIGHT].strip())
     weight_layout.addWidget(weight_label)
     self.weight_value = QLabel(f"{getattr(self, 'saved_control_weight', 1.0):.2f}")
     self.weight_value.setStyleSheet("min-width: 40px; color: white;")
@@ -266,7 +415,7 @@ def open_settings(self):
     gstart_container = QWidget()
     gstart_layout = QHBoxLayout(gstart_container)
     gstart_layout.setContentsMargins(0, 0, 0, 0)
-    gstart_label = QLabel("Guidance Start")
+    gstart_label = QLabel(lang[LangKeys.LBL_G_START].strip())
     gstart_layout.addWidget(gstart_label)
     self.gstart_value = QLabel(f"{getattr(self, 'saved_guidance_start', 0.0):.2f}")
     self.gstart_value.setStyleSheet("min-width: 40px; color: white;")
@@ -282,7 +431,7 @@ def open_settings(self):
     gend_container = QWidget()
     gend_layout = QHBoxLayout(gend_container)
     gend_layout.setContentsMargins(0, 0, 0, 0)
-    gend_label = QLabel("Guidance End")
+    gend_label = QLabel(lang[LangKeys.LBL_G_END].strip())
     gend_layout.addWidget(gend_label)
     self.gend_value = QLabel(f"{getattr(self, 'saved_guidance_end', 1.0):.2f}")
     self.gend_value.setStyleSheet("min-width: 40px; color: white;")
@@ -298,7 +447,7 @@ def open_settings(self):
     proc_container = QWidget()
     proc_layout = QHBoxLayout(proc_container)
     proc_layout.setContentsMargins(0, 0, 0, 0)
-    proc_label = QLabel("Processor Res")
+    proc_label = QLabel(lang[LangKeys.LBL_PROC_RES].strip())
     proc_layout.addWidget(proc_label)
     self.proc_value = QLabel(str(getattr(self, 'saved_processor_res', 512)))
     self.proc_value.setStyleSheet("min-width: 40px; color: white;")
@@ -314,7 +463,7 @@ def open_settings(self):
     tha_container = QWidget()
     tha_layout = QHBoxLayout(tha_container)
     tha_layout.setContentsMargins(0, 0, 0, 0)
-    tha_label = QLabel("Threshold A")
+    tha_label = QLabel(lang[LangKeys.LBL_THRESH_A].strip())
     tha_layout.addWidget(tha_label)
     self.tha_value = QLabel(str(getattr(self, 'saved_threshold_a', 64)))
     self.tha_value.setStyleSheet("min-width: 30px; color: white;")
@@ -330,7 +479,7 @@ def open_settings(self):
     thb_container = QWidget()
     thb_layout = QHBoxLayout(thb_container)
     thb_layout.setContentsMargins(0, 0, 0, 0)
-    thb_label = QLabel("Threshold B")
+    thb_label = QLabel(lang[LangKeys.LBL_THRESH_B].strip())
     thb_layout.addWidget(thb_label)
     self.thb_value = QLabel(str(getattr(self, 'saved_threshold_b', 64)))
     self.thb_value.setStyleSheet("min-width: 30px; color: white;")
@@ -343,25 +492,54 @@ def open_settings(self):
     cn_layout.addWidget(thb_container)
     
     # --- Control Mode ---#
-    mode_label = QLabel("Control Mode:")
+    mode_label = QLabel(lang[LangKeys.LBL_CTRL_MODE].strip())
     mode_label.setStyleSheet("font-weight: bold; margin-top: 10px;")
+    dialog.lbl_mode = mode_label
     cn_layout.addWidget(mode_label)
+
     self.control_mode_group = QButtonGroup()
-    for i, text in enumerate(["Balanced", "My prompt is more important", "ControlNet is more important"]):
-        rb = QRadioButton(text)
-        self.control_mode_group.addButton(rb, i)
-        cn_layout.addWidget(rb)
+
+    #to muszą być raddiobuttony!!!!
+    rb_balanced = QRadioButton(lang[LangKeys.RB_BALANCED].strip())
+    self.control_mode_group.addButton(rb_balanced, 0)
+    cn_layout.addWidget(rb_balanced)
+    dialog.rb_balanced = rb_balanced
+
+    rb_prompt = QRadioButton(lang[LangKeys.RB_PROMPT_IMP].strip())
+    self.control_mode_group.addButton(rb_prompt, 1)
+    cn_layout.addWidget(rb_prompt)
+    dialog.rb_prompt = rb_prompt
+
+    rb_cn = QRadioButton(lang[LangKeys.RB_CN_IMP].strip())
+    self.control_mode_group.addButton(rb_cn, 2)
+    cn_layout.addWidget(rb_cn)
+    dialog.rb_cn = rb_cn
+
     self.control_mode_group.button(getattr(self, 'saved_control_mode', 0)).setChecked(True)
     
     # --- Resize Mode ---#
-    resize_label = QLabel("Resize Mode:")
+    resize_label = QLabel(lang[LangKeys.LBL_RESIZE_MODE].strip()) 
     resize_label.setStyleSheet("font-weight: bold; margin-top: 10px;")
+    dialog.lbl_resize = resize_label # Przypisanie
     cn_layout.addWidget(resize_label)
+
     self.resize_mode_group = QButtonGroup()
-    for i, text in enumerate(["Just Resize", "Crop and Resize", "Resize and Fill"]):
-        rb = QRadioButton(text)
-        self.resize_mode_group.addButton(rb, i)
-        cn_layout.addWidget(rb)
+
+    rb_just = QRadioButton(lang[LangKeys.RB_JUST_RESIZE].strip())
+    self.resize_mode_group.addButton(rb_just, 0)
+    cn_layout.addWidget(rb_just)
+    dialog.rb_just = rb_just
+
+    rb_crop = QRadioButton(lang[LangKeys.RB_CROP_RESIZE].strip())
+    self.resize_mode_group.addButton(rb_crop, 1)
+    cn_layout.addWidget(rb_crop)
+    dialog.rb_crop = rb_crop
+
+    rb_fill = QRadioButton(lang[LangKeys.RB_RESIZE_FILL].strip())
+    self.resize_mode_group.addButton(rb_fill, 2)
+    cn_layout.addWidget(rb_fill)
+    dialog.rb_fill = rb_fill
+
     self.resize_mode_group.button(getattr(self, 'saved_resize_mode', 1)).setChecked(True)
     
     # --- Checkboxy ---#
@@ -379,10 +557,10 @@ def open_settings(self):
 
     #------ Inne opcje ----#
 
-    other_group = QGroupBox("Inne opcje")
+    other_group = QGroupBox(lang[LangKeys.GRP_OTHER].strip())
     other_layout = QVBoxLayout()
     
-    self.timestamp_cb = QCheckBox("Dodaj timestamp do nazwy pliku")
+    self.timestamp_cb = QCheckBox(lang[LangKeys.CB_TIMESTAMP].strip())
     self.timestamp_cb.setChecked(getattr(self, 'saved_save_with_timestamp', False))
     other_layout.addWidget(self.timestamp_cb)
     
@@ -392,19 +570,20 @@ def open_settings(self):
 
     #----- Połączenie z SD---###3
 
-    connect_group = QGroupBox("Połączenie z SD")
+    connect_group = QGroupBox(lang[LangKeys.GRP_CONNECT].strip())
     connect_layout = QVBoxLayout()
     self.sd_url_edit = QLineEdit(getattr(self, 'saved_sd_url', "http://127.0.0.1:7860"))
-    connect_layout.addWidget(QLabel("Adres SD API:"))
+    connect_layout.addWidget(QLabel(lang[LangKeys.LBL_API_URL].strip()))
     connect_layout.addWidget(self.sd_url_edit)
-    connect_btn = QPushButton("Połącz z SD")
+    connect_btn = QPushButton(lang[LangKeys.BTN_CONNECT].strip())
     
     def _connect():
         import sd
         url = self.sd_url_edit.text().strip() or None
         self.saved_sd_url = url or "http://127.0.0.1:7860"
-        res = sd.connect_sd(window=self, url=url, timeout=4)  #'window=self' – poprawka, bo 'self' to dialog, ale connect_sd oczekuje window
+        res = sd.connect_sd(window=self, url=url, timeout=4) # 'window=self' – poprawka, bo 'self' to dialog, ale connect_sd oczekuje window
         if res.get('ok'):
+            #dubbing
             QMessageBox.information(dialog, "Połączono", f"Znaleziono {len(res.get('models', []))} modeli, {len(res.get('controlnets', []))} ControlNet, {len(res.get('modules', []))} modułów.")
             #aktualizacja combo boxów
             self.model_combo.clear()
@@ -419,7 +598,8 @@ def open_settings(self):
             if hasattr(self, 'saved_preprocessor') and self.saved_preprocessor in modules:
                 self.prep_combo.setCurrentText(self.saved_preprocessor)
         else:
-            QMessageBox.warning(dialog, "Błąd połączenia", f"Nie można połączyć z SD:\n{res.get('error')}")
+            err = lang[LangKeys.MSG_CONN_ERR_BODY].strip().format(res.get('error'))
+            QMessageBox.warning(dialog, lang[LangKeys.MSG_CONN_ERR_TITLE].strip(), err)
 
             
     connect_btn.clicked.connect(_connect)
@@ -427,11 +607,12 @@ def open_settings(self):
     connect_group.setLayout(connect_layout)
     form.addRow(connect_group)
     
+    main_layout.addWidget(widget)
 
-    scroll.setWidget(widget)
+    scroll.setWidget(main_widget)
     layout.addWidget(scroll)
     btn_layout = QHBoxLayout()
-    save_btn = QPushButton("Zapisz ustawienia")
+    save_btn = QPushButton(lang[LangKeys.BTN_SAVE_SETTINGS].strip())
     save_btn.clicked.connect(lambda: save_settings(self, dialog))
     btn_layout.addWidget(save_btn)
     layout.addLayout(btn_layout)
@@ -483,3 +664,55 @@ def save_settings(self, dialog):
         dialog.accept()
     except Exception as e:
         QMessageBox.critical(dialog, "Błąd", f"Błąd zapisywania ustawień: {e}")
+
+
+
+
+
+def load_language_files(combo_box):
+    #nie zmieniamy. Jest to przestrzeń na konfigurację
+    lang_dir = "Language"
+    
+    combo_box.clear()
+    
+    if not os.path.exists(lang_dir):
+        combo_box.addItem("Missing: Language folder", None)
+        return
+
+    try:
+        f = os.listdir(lang_dir)
+        isin = False
+        
+        for fname in sorted(f):
+            if fname.endswith("_RFP.txt"):#format ma być własnie taki
+                display_name = fname.replace("_RFP.txt", "")
+                combo_box.addItem(display_name, fname)
+                isin = True
+        
+        if not isin:
+            combo_box.addItem("None", None)
+            
+    except Exception as e:
+        print(f"Erro {e}")
+        combo_box.addItem("ERROR", None)
+
+
+
+def change_language_on_selection(main_window):
+    selected = main_window.settings_lang_combo.currentData()
+    if not selected:
+        return
+
+    #debbuging
+    try:
+        print(f"Wybrano język: {selected}")
+            
+        file_configurator.language_version(main_window, selected)
+            
+        main_window.repaint()
+        #dialog.repaint()
+    except Exception as e:
+        print(f"Error: {e}. Check language packs")
+        
+    
+
