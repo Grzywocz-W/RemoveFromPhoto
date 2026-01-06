@@ -73,3 +73,20 @@ Błąd SD
 Wystąpił błąd: {}
 usuń obiekt, wypełnij tłem naturalnie
 niska jakość, rozmycie, artefakty
+Obraz ma nieprawidłowy rozmiar (0x0).
+Uwaga: Obraz jest bardzo duży: {}x{}.
+Nie można otworzyć obrazu:\n{}
+Brak obrazu do zapisania.
+Zapisz obraz
+Zapisano: {}
+Wczytaj obraz najpierw.
+Zaznacz obszar do usunięcia.
+⏳ Przetwarzanie...
+✓ Gotowy
+Najpierw połącz się z SD (Ustawienia -> Połącz).
+Brak operacji do cofnięcia.
+Otwórz obraz
+Obrazy (*.png *.jpg *.jpeg *.bmp)
+Język / Language
+Pędzel
+Skala %

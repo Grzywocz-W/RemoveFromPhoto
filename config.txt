@@ -2,9 +2,9 @@
 http://127.0.0.1:7860
 1
 0
-usuń obiekt i wypełnij tłem naturalnie
+dadasdasd
 niska jakość, rozmycie, artefakty
 25
 0.7
 7.0
-RUS_RFP.txt
+ENG_RFP.txt

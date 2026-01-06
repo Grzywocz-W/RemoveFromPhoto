@@ -8,6 +8,7 @@ from PyQt5.QtGui import QPixmap, QPen, QColor, QBrush, QKeySequence, QImage, QPa
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QBrush, QColor
 import helpers
+from file_configurator import LangKeys
 
 class RoundedButton(QPushButton):
     def __init__(self, text, parent=None):
@@ -277,7 +278,9 @@ def setup_ui(self):
     brush_layout.setContentsMargins(0, 0, 0, 0)
     brush_layout.setAlignment(Qt.AlignCenter)
 
-    self.brush_label = QLabel("Pędzel")
+    lang = getattr(self, 'lang_data', None)
+    
+    self.brush_label = QLabel(lang[LangKeys.LBL_BRUSH_NAME].strip() if lang else "Pędzel")
     self.brush_label.setStyleSheet(label_style)
     self.brush_label.setAlignment(Qt.AlignCenter)
     brush_layout.addWidget(self.brush_label)
@@ -344,7 +347,7 @@ def setup_ui(self):
     scale_layout.setContentsMargins(0, 0, 0, 0)
     scale_layout.setAlignment(Qt.AlignCenter)
 
-    self.scale_label = QLabel("Skala %")
+    self.scale_label = QLabel(lang[LangKeys.LBL_SCALE_NAME].strip() if lang else "Skala %")
     self.scale_label.setStyleSheet(label_style)
     self.scale_label.setAlignment(Qt.AlignCenter)
     scale_layout.addWidget(self.scale_label)

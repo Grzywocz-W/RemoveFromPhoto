@@ -7,7 +7,7 @@ import socket
 import json
 from typing import List, Dict, Any, Optional
 from PyQt5.QtWidgets import QMessageBox
-
+from file_configurator import LangKeys
 
 def send_request(base_url: str, method: str, path: str, json_body: Optional[dict] = None,
                  headers: Optional[dict] = None, timeout: int = 5) -> Any:
@@ -177,16 +177,41 @@ def sd_inpaint_with_controlnet(window, image_bytes: bytes = None, mask_bytes: by
             #Aktualizacja wyświetlania
             if hasattr(window, 'draw_image'):
                 window.draw_image()
-            QMessageBox.information(window, "Sukces", "Inpainting zakończony pomyślnie!")
+            
+            lang = getattr(window, 'lang_data', None)
+            
+            if lang:
+                QMessageBox.information(window, lang[LangKeys.MSG_SUCCESS_TITLE].strip(), lang[LangKeys.MSG_INPAINT_DONE].strip())
+            else:
+                QMessageBox.information(window, "Sukces", "Inpainting zakończony pomyślnie!")
+                
         else:
-            QMessageBox.critical(window, "Błąd", "Brak wyniku z SD API.")
+            lang = getattr(window, 'lang_data', None)
+            if lang:
+                QMessageBox.critical(window, lang[LangKeys.MSG_SD_ERR_TITLE].strip(), lang[LangKeys.MSG_NO_RESULT].strip())
+            else:
+                QMessageBox.critical(window, "Błąd", "Brak wyniku z SD API.")
 
     except ConnectionError as e:
-        QMessageBox.critical(window, "Błąd SD", str(e))
+        lang = getattr(window, 'lang_data', None)
+        title = lang[LangKeys.MSG_CONN_ERR_TITLE].strip() if lang else "Błąd SD"
+        QMessageBox.critical(window, title, str(e))
+        
     except TimeoutError as e:
-        QMessageBox.critical(window, "Błąd SD", str(e))
+        lang = getattr(window, 'lang_data', None)
+        title = lang[LangKeys.MSG_CONN_ERR_TITLE].strip() if lang else "Błąd SD"
+        QMessageBox.critical(window, title, str(e))
+        
     except Exception as e:
-        QMessageBox.critical(window, "Błąd SD", f"Wystąpił błąd: {str(e)}")
+        lang = getattr(window, 'lang_data', None)
+        if lang:
+            title = lang[LangKeys.MSG_SD_ERR_TITLE].strip()
+            body = lang[LangKeys.MSG_GENERIC_ERR].strip().format(str(e))
+        else:
+            title = "Błąd SD"
+            body = f"Wystąpił błąd: {str(e)}"
+            
+        QMessageBox.critical(window, title, body)
 
 class SDClient:
     def __init__(self, base_url: str = "http://127.0.0.1:7860", timeout: int = 5):

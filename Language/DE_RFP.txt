@@ -73,3 +73,20 @@ SD-Fehler
 Ein Fehler ist aufgetreten: {}
 objekt entfernen, hintergrund natürlich füllen
 niedrige qualität, unscharf, artefakte
+Bild hat eine ungültige Größe (0x0).
+Warnung: Bild ist sehr groß: {}x{}.
+Kann Bild nicht öffnen:\n{}
+Kein Bild zum Speichern.
+Bild speichern
+Gespeichert: {}
+Zuerst ein Bild laden.
+Zuerst einen Bereich zum Entfernen auswählen.
+⏳ Wird verarbeitet...
+✓ Bereit
+Zuerst mit SD verbinden (Einstellungen -> Verbinden).
+Nichts zum Rückgängigmachen.
+Bild öffnen
+Bilder (*.png *.jpg *.jpeg *.bmp)
+Sprache / Language
+Pinsel
+Skalierung %

@@ -259,10 +259,12 @@ def open_settings(self):
 
     
     #Prompt i Negative Prompt
-    self.prompt_edit = QLineEdit(getattr(self, 'saved_prompt', lang[LangKeys.DEFAULT_PROMPT].strip()))
-    form.addRow("Prompt:", self.prompt_edit)
-    self.neg_edit = QLineEdit(getattr(self, 'saved_negative_prompt', lang[LangKeys.DEFAULT_NEG_PROMPT]))
-    form.addRow("Negative Prompt:", self.neg_edit)
+    default_prompt_text = "remove object, fill with natural background"
+    default_neg_text = "low quality, blurry, artifacts, text, watermark"
+    self.prompt_edit = QLineEdit(getattr(self, 'saved_prompt', default_prompt_text))
+    form.addRow(lang[LangKeys.LBL_PROMPT].strip(), self.prompt_edit)
+    self.neg_edit = QLineEdit(getattr(self, 'saved_negative_prompt', default_neg_text))
+    form.addRow(lang[LangKeys.LBL_NEG_PROMPT].strip(), self.neg_edit)
     
 
     #------Parametry Stable Diffusion----#
@@ -306,7 +308,7 @@ def open_settings(self):
     cfg_container = QWidget()
     cfg_layout = QHBoxLayout(cfg_container)
     cfg_layout.setContentsMargins(0, 0, 0, 0)
-    cfg_label = QLabel("CFG Scale")
+    cfg_label = QLabel(lang[LangKeys.LBL_CFG].strip())
     cfg_layout.addWidget(cfg_label)
     self.cfg_value = QLabel(f"{getattr(self, 'saved_cfg_scale', 7.0):.1f}")
     self.cfg_value.setStyleSheet("min-width: 40px; color: white;")
@@ -543,11 +545,11 @@ def open_settings(self):
     self.resize_mode_group.button(getattr(self, 'saved_resize_mode', 1)).setChecked(True)
     
     # --- Checkboxy ---#
-    self.pixel_perfect_cb = QCheckBox("Pixel Perfect")
+    self.pixel_perfect_cb = QCheckBox(lang[LangKeys.CB_PIXEL_PERF].strip())
     self.pixel_perfect_cb.setChecked(getattr(self, 'saved_pixel_perfect', False))
     cn_layout.addWidget(self.pixel_perfect_cb)
     
-    self.lowvram_cb = QCheckBox("Low VRAM")
+    self.lowvram_cb = QCheckBox(lang[LangKeys.CB_LOW_VRAM].strip())
     self.lowvram_cb.setChecked(getattr(self, 'saved_lowvram', False))
     cn_layout.addWidget(self.lowvram_cb)
     
@@ -660,7 +662,12 @@ def save_settings(self, dialog):
         file_configurator.save_config(self)#self, bo settings jest już w window
 
         
-        QMessageBox.information(dialog, "OK", "Ustawienia zapisane!")
+        lang = getattr(self, 'lang_data', None)
+        if lang:
+             QMessageBox.information(dialog, lang[LangKeys.MSG_OK].strip(), lang[LangKeys.MSG_SETTINGS_SAVED].strip())
+        else:
+             QMessageBox.information(dialog, "OK", "Ustawienia zapisane!")
+             
         dialog.accept()
     except Exception as e:
         QMessageBox.critical(dialog, "Błąd", f"Błąd zapisywania ustawień: {e}")

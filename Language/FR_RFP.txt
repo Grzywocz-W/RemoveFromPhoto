@@ -1,8 +1,8 @@
-Suppression d'objets – Lasso  Pinceau
-Outil 
+Suppression d'objets – Lasso / Pinceau
+Outil :
 Lasso
 Pinceau
-Méthode de remplissage 
+Méthode de remplissage :
 Voisinage (Neighbor)
 Vide (Blanc)
 SD + ControlNet
@@ -19,21 +19,21 @@ Taille du pinceau
 Échelle %
 Paramètres SD + ControlNet
 Configuration SD
-Prompt 
-Negative Prompt 
+Prompt :
+Negative Prompt :
 Paramètres Stable Diffusion
 Étapes (Steps)
 Force de débruitage (Denoising)
 Échelle CFG
 Paramètres de graine (Seed)
 Graine aléatoire
-Graine 
+Graine :
 Modèles et Préprocesseurs
 Pas de connexion SD
-Modèle SD 
+Modèle SD :
 Pas de ControlNet
-Modèle ControlNet 
-Préprocesseur 
+Modèle ControlNet :
+Préprocesseur :
 ControlNet - Avancé
 Poids du contrôle (Weight)
 Début du guidage (Guidance Start)
@@ -41,11 +41,11 @@ Fin du guidage (Guidance End)
 Résolution (Preprocessor Res)
 Seuil A (Threshold A)
 Seuil B (Threshold B)
-Mode de contrôle (Control Mode) 
+Mode de contrôle (Control Mode) :
 Équilibré
 Mon prompt est prioritaire
 ControlNet est prioritaire
-Mode de redimensionnement (Resize) 
+Mode de redimensionnement (Resize) :
 Juste redimensionner
 Recadrer et redimensionner
 Redimensionner et remplir
@@ -54,22 +54,39 @@ Faible VRAM (Low VRAM)
 Autres options
 Ajouter l'horodatage au nom de fichier
 Connexion SD
-URL API SD 
+URL API SD :
 Connecter
 Aucun modèle trouvé
 Enregistrer les paramètres
 Connecté
-Trouvé  {} modèles, {} ControlNets, {} modules.
+Trouvé : {} modèles, {} ControlNets, {} modules.
 Erreur de connexion
-Impossible de se connecter à SD  {}
+Impossible de se connecter à SD : {}
 OK
 Paramètres enregistrés !
 Erreur
-Erreur lors de l'enregistrement  {}
+Erreur lors de l'enregistrement : {}
 Succès
 Inpainting terminé avec succès !
 Aucun résultat de l'API SD.
 Erreur SD
-Une erreur est survenue  {}
+Une erreur est survenue : {}
 supprimer l'objet, remplir avec fond naturel
 basse qualité, flou, artefacts
+L'image a une taille invalide (0x0).
+Attention : L'image est très grande : {}x{}.
+Impossible d'ouvrir l'image :\n{}
+Aucune image à enregistrer.
+Enregistrer l'image
+Enregistré : {}
+Chargez d'abord une image.
+Sélectionnez d'abord une zone à effacer.
+⏳ Traitement...
+✓ Prêt
+Connectez-vous d'abord à SD (Paramètres -> Connecter).
+Rien à annuler.
+Ouvrir une image
+Images (*.png *.jpg *.jpeg *.bmp)
+Langue / Language
+Pinceau
+Échelle %

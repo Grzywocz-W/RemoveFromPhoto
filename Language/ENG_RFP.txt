@@ -73,3 +73,20 @@ SD Error
 An error occurred: {}
 remove object and fill naturally with background
 low quality, blurry, artifacts
+Image has invalid size (0x0).
+Warning: Image is very large: {}x{}.
+Cannot open image:\n{}
+No image to save.
+Save Image
+Saved: {}
+Load an image first.
+Select an area to erase first.
+⏳ Processing...
+✓ Ready
+Connect to SD first (Settings -> Connect).
+Nothing to undo.
+Open Image
+Images (*.png *.jpg *.jpeg *.bmp)
+Language / Język
+Brush
+Scale %

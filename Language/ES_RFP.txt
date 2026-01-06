@@ -73,3 +73,20 @@ Error SD
 Ocurrió un error: {}
 eliminar objeto, rellenar con fondo natural
 baja calidad, borroso, artefactos
+La imagen tiene un tamaño inválido (0x0).
+Advertencia: La imagen es muy grande: {}x{}.
+No se puede abrir la imagen:\n{}
+No hay imagen para guardar.
+Guardar imagen
+Guardado: {}
+Carga una imagen primero.
+Selecciona un área para borrar primero.
+⏳ Procesando...
+✓ Listo
+Conéctate a SD primero (Ajustes -> Conectar).
+Nada que deshacer.
+Abrir imagen
+Imágenes (*.png *.jpg *.jpeg *.bmp)
+Idioma / Language
+Pincel
+Escala %

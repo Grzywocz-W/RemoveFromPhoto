@@ -138,7 +138,7 @@ def language_version(window,file = "ENG_RFP.txt"):
     l_file.close()
 
     try:
-        if len(lang) >= 75:#75 to długość tego pliku. Jak coś dodajecie to zmieńcie wartość
+        if len(lang) >= 92:#75 to długość tego pliku. Jak coś dodajecie to zmieńcie wartość
 ##            for linie in lang:
 ##                if linie:
 ##                    print(linie.strip())
@@ -292,5 +292,23 @@ class LangKeys(IntEnum):
     #Wartości domyślne
     DEFAULT_PROMPT = 73
     DEFAULT_NEG_PROMPT = 74
-    
+
+
+    MSG_ERR_INVALID_SIZE = 75
+    MSG_WARN_BIG_IMAGE = 76
+    MSG_ERR_OPEN_FAIL = 77
+    MSG_WARN_NO_IMG_SAVE = 78
+    TITLE_SAVE_DIALOG = 79
+    MSG_SAVED_PATH = 80
+    MSG_WARN_LOAD_IMG = 81
+    MSG_WARN_NO_SEL = 82
+    STATUS_PROCESSING = 83
+    STATUS_READY = 84
+    MSG_WARN_CONNECT_FIRST = 85
+    MSG_INFO_NO_UNDO = 86
+    TITLE_OPEN_DIALOG = 87
+    FILE_FILTER_IMG = 88
+    GRP_LANGUAGE = 89
+    LBL_BRUSH_NAME = 90
+    LBL_SCALE_NAME = 91
 
