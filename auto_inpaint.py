@@ -100,7 +100,7 @@ def auto_inpaint(img, mask, neighbor_func=None, telea_func=None, criminisi_func=
 
     method = select_best_inpainting_method(mask)
     ###DEBUGGING####
-    print(f"Auto-wybór metody: {method.upper()}")
+    #print(f"Auto-wybór metody: {method.upper()}")
     
     if method == 'neighbor':
         if neighbor_func:

@@ -13,7 +13,7 @@ from auto_inpaint import auto_inpaint
 
 from file_configurator import LangKeys
 
-#===stałe===#
+#stale
 COLORS = {
     "status_idle": "#FFFF00",
     "status_done": "#00AA00",
@@ -31,8 +31,7 @@ def pil_to_base64(img_pil, fmt="PNG"):
 
 
 def bytes_to_pil_image(data: bytes, mode: str = "RGB"):
-    """Konwertuje surowe bajty obrazu (np. pliki PNG/JPEG) na obiekt PIL.Image.
-
+    """Konwertuje surowe bajty obrazu na obiekt PIL.Image.
     Zwraca obiekt PIL.Image w żądanym trybie (domyślnie RGB).
     """
     if data is None:
@@ -42,7 +41,7 @@ def bytes_to_pil_image(data: bytes, mode: str = "RGB"):
 
 
 def bytes_to_mask_image(data: bytes):
-    """Konwertuje surowe bajty na maskę w skali szarości (tryb 'L')."""
+    """Konwertuje surowe bajty na maskę w skali szarości ('L')."""
     if data is None:
         raise ValueError("No mask data provided")
     img = Image.open(io.BytesIO(data)).convert("L")
@@ -181,8 +180,8 @@ def open_image(self):
             img = Image.open(path).convert("RGB")
             if img.width == 0 or img.height == 0:
                 raise ValueError(lang[LangKeys.MSG_ERR_INVALID_SIZE].strip() if lang else "Obraz ma nieprawidłowy rozmiar")
-            if img.width > 4096 or img.height > 4096:
-                QMessageBox.warning(self, "Uwaga", lang[LangKeys.MSG_WARN_BIG_IMAGE].strip().format(img.width, img.height) if lang else f"Obraz bardzo duży: {img.width}x{img.height}")
+            #if img.width > 4096 or img.height > 4096:
+                #QMessageBox.warning(self, "Uwaga", lang[LangKeys.MSG_WARN_BIG_IMAGE].strip().format(img.width, img.height) if lang else f"Obraz bardzo duży: {img.width}x{img.height}")
             self.image = img
             self.mask = Image.new("L", self.image.size, 0)
             self.history.clear()
@@ -198,7 +197,7 @@ def open_image(self):
             else:
                 self.view.viewport().setCursor(Qt.CrossCursor)
         except Exception as e:
-            QMessageBox.critical(self, "Błąd", lang[LangKeys.MSG_ERR_OPEN_FAIL].strip().format(str(e)) if lang else f"Nie można otworzyć obrazu:\n{str(e)}")
+            QMessageBox.critical(self, lang[LangKeys.MSG_ERR_TITLE].strip(), lang[LangKeys.MSG_ERR_OPEN_FAIL].strip().format(str(e)) if lang else f"Nie można otworzyć obrazu:\n{str(e)}")
 
 
 def set_image_from_bytes(self, data: bytes):
@@ -247,7 +246,7 @@ def set_image_and_mask_from_bytes(self, image_bytes: bytes, mask_bytes: bytes):
 def save_image(self):
     lang = getattr(self, 'lang_data', None)
     if not self.image:
-        QMessageBox.warning(self, "Błąd", lang[LangKeys.MSG_WARN_NO_IMG_SAVE].strip() if lang else "Brak obrazu do zapisania.")
+        QMessageBox.warning(self, lang[LangKeys.MSG_ERR_TITLE].strip(), lang[LangKeys.MSG_WARN_NO_IMG_SAVE].strip() if lang else "Brak obrazu do zapisania.")
         return
     if get_timestamp():
         default_name = f"wynik_{get_timestamp()}.png" 
@@ -256,16 +255,16 @@ def save_image(self):
     path, _ = QFileDialog.getSaveFileName(self, lang[LangKeys.TITLE_SAVE_DIALOG].strip() if lang else "Zapisz obraz", default_name, "PNG (*.png);;JPG (*.jpg)")
     if path:
         self.image.save(path)
-        QMessageBox.information(self, "Zapisano", lang[LangKeys.MSG_SAVED_PATH].strip().format(path) if lang else f"Zapisano: {path}")
+        #QMessageBox.information(self, "Zapisano", lang[LangKeys.MSG_SAVED_PATH].strip().format(path) if lang else f"Zapisano: {path}")
         
 def erase_selection(self):
     from PyQt5.QtWidgets import QMessageBox, QApplication
     lang = getattr(self, 'lang_data', None)
     if not self.image:
-        QMessageBox.warning(self, "Błąd", lang[LangKeys.MSG_WARN_LOAD_IMG].strip() if lang else "Wczytaj obraz najpierw.")
+        QMessageBox.warning(self, lang[LangKeys.MSG_ERR_TITLE].strip(), lang[LangKeys.MSG_WARN_LOAD_IMG].strip() if lang else "Wczytaj obraz najpierw.")
         return
     if not self.mask or not any(px > 0 for px in self.mask.getdata()):
-        QMessageBox.warning(self, "Błąd", lang[LangKeys.MSG_WARN_NO_SEL].strip() if lang else "Zaznacz obszar do usunięcia.")
+        QMessageBox.warning(self, lang[LangKeys.MSG_ERR_TITLE].strip(), lang[LangKeys.MSG_WARN_NO_SEL].strip() if lang else "Zaznacz obszar do usunięcia.")
         return
     
     #===DODANIE DO HISTORII===#
@@ -374,4 +373,4 @@ def reset_selection(self):
         except Exception:
             pass
     else:
-        QMessageBox.warning(self, "Błąd", lang[LangKeys.MSG_WARN_LOAD_IMG].strip() if lang else "Wczytaj obraz najpierw.")
+        QMessageBox.warning(self, lang[LangKeys.MSG_ERR_TITLE].strip(), lang[LangKeys.MSG_WARN_LOAD_IMG].strip() if lang else "Wczytaj obraz najpierw.")

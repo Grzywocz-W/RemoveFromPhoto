@@ -43,7 +43,7 @@ class LassoEraser(QMainWindow):
         self.available_models = []
         self.controlnet_models = []
 
-        # Preprocesory
+        #Preprocesory, chyba można usunąć
         self.controlnet_preprocessors = [
             "none", "inpaint", "inpaint_global", "canny", "depth", "openpose",
             "scribble", "mlsd", "hed", "softedge", "lineart", "reference_only"

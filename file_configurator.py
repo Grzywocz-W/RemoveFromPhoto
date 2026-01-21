@@ -4,7 +4,7 @@ import os
 def load_from_file(window):
     config_file = "config.txt"
     if not os.path.exists(config_file):
-        print("Ustawienia domyślne")
+        #print("Ustawienia domyślne")
         return
     
     try:
@@ -19,7 +19,7 @@ def load_from_file(window):
 
         
         if len(settings) < len(conf_sett):
-            print("Corrupted file")
+            #print("Corrupted file")
             return
             
         window.saved_sd_url = settings[conf_sett.url.value]
@@ -68,7 +68,7 @@ def load_from_file(window):
 
 
     except Exception as e:
-        print(f"Błąd podczas wczytywania pliku: {e}")
+        print(f"Error {e}")
                 
             
 

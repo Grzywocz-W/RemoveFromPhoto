@@ -1,5 +1,7 @@
 import sys
 import os #dla obsługi języków
+import traceback
+import sd
 from PyQt5.QtWidgets import (QDialog, QVBoxLayout, QGroupBox, QFormLayout, 
     QScrollArea, QLineEdit, QLabel, QWidget, QHBoxLayout, QComboBox, 
     QSlider, QPushButton, QCheckBox, QButtonGroup, QRadioButton, QMessageBox)
@@ -572,42 +574,35 @@ def open_settings(self):
 
     #----- Połączenie z SD---###3
 
+    
+
+
+
     connect_group = QGroupBox(lang[LangKeys.GRP_CONNECT].strip())
     connect_layout = QVBoxLayout()
+    
     self.sd_url_edit = QLineEdit(getattr(self, 'saved_sd_url', "http://127.0.0.1:7860"))
     connect_layout.addWidget(QLabel(lang[LangKeys.LBL_API_URL].strip()))
     connect_layout.addWidget(self.sd_url_edit)
+    
     connect_btn = QPushButton(lang[LangKeys.BTN_CONNECT].strip())
     
-    def _connect():
-        import sd
-        url = self.sd_url_edit.text().strip() or None
-        self.saved_sd_url = url or "http://127.0.0.1:7860"
-        res = sd.connect_sd(window=self, url=url, timeout=4) # 'window=self' – poprawka, bo 'self' to dialog, ale connect_sd oczekuje window
-        if res.get('ok'):
-            #dubbing
-            QMessageBox.information(dialog, "Połączono", f"Znaleziono {len(res.get('models', []))} modeli, {len(res.get('controlnets', []))} ControlNet, {len(res.get('modules', []))} modułów.")
-            #aktualizacja combo boxów
-            self.model_combo.clear()
-            self.model_combo.addItems(res.get('models', []) or ["Brak modeli"])
-            self.control_combo.clear()
-            self.control_combo.addItems(res.get('controlnets', []) or ["Brak ControlNet"])
-            self.prep_combo.clear()
-            modules = res.get('modules', []) or ['inpaint_only']
-            self.prep_combo.addItems(modules)
-
-            # NIE USTAWIAŁO preprocesora
-            if hasattr(self, 'saved_preprocessor') and self.saved_preprocessor in modules:
-                self.prep_combo.setCurrentText(self.saved_preprocessor)
-        else:
-            err = lang[LangKeys.MSG_CONN_ERR_BODY].strip().format(res.get('error'))
-            QMessageBox.warning(dialog, lang[LangKeys.MSG_CONN_ERR_TITLE].strip(), err)
-
-            
-    connect_btn.clicked.connect(_connect)
+    connect_btn.clicked.connect(lambda: logic_connect_to_sd(
+        main_window=self, 
+        dialog=dialog, 
+        url_edit=self.sd_url_edit, 
+        combo_model=self.model_combo, 
+        combo_control=self.control_combo, 
+        combo_prep=self.prep_combo
+    ))
+    
     connect_layout.addWidget(connect_btn)
     connect_group.setLayout(connect_layout)
     form.addRow(connect_group)
+
+
+
+    
     
     main_layout.addWidget(widget)
 
@@ -670,7 +665,7 @@ def save_settings(self, dialog):
              
         dialog.accept()
     except Exception as e:
-        QMessageBox.critical(dialog, "Błąd", f"Błąd zapisywania ustawień: {e}")
+        QMessageBox.critical(dialog, "Error", f"Error{e}")
 
 
 
@@ -712,7 +707,7 @@ def change_language_on_selection(main_window):
 
     #debbuging
     try:
-        print(f"Wybrano język: {selected}")
+        #print(f"Wybrano język: {selected}")
             
         file_configurator.language_version(main_window, selected)
             
@@ -720,6 +715,49 @@ def change_language_on_selection(main_window):
         #dialog.repaint()
     except Exception as e:
         print(f"Error: {e}. Check language packs")
+
+def logic_connect_to_sd(main_window, dialog, url_edit, combo_model, combo_control, combo_prep):
+    lang = getattr(main_window, 'lang_data', {})
+    try:
+        url = url_edit.text().strip() or None
+        if not url:
+            url = "http://127.0.0.1:7860"
+        
+        main_window.saved_sd_url = url
+
+        res = sd.connect_sd(window=main_window, url=url, timeout=5)
+
+        if res.get('ok'):
+            combo_model.clear()
+            combo_model.addItems(res.get('models', []) or ["Brak modeli"])
+            
+            combo_control.clear()
+            combo_control.addItems(res.get('controlnets', []) or ["Brak ControlNet"])
+            
+            combo_prep.clear()
+            modules = res.get('modules', []) or ['inpaint_only']
+            combo_prep.addItems(modules)
+
+            if hasattr(main_window, 'saved_preprocessor') and main_window.saved_preprocessor in modules:
+                combo_prep.setCurrentText(main_window.saved_preprocessor)
+            
+            #QMessageBox.information(dialog, "Sukces", f"Połączono z SD!\nZaładowano {len(res.get('models', []))} modeli.")
+
+        else:
+            error_msg = res.get('error', 'Unknown error')
+            title = lang[LangKeys.MSG_CONN_ERR_TITLE].strip()
+            body_fmt = lang[LangKeys.MSG_CONN_ERR_BODY].strip()
+            
+            QMessageBox.warning(dialog, title, body_fmt.format(error_msg))
+
+    except Exception as e:
+            print("!!! CRITICAL ERROR IN CONNECT !!!")
+            traceback.print_exc()
+            
+            title = lang.get(LangKeys.MSG_ERR_TITLE, "Error")
+            body_fmt = lang.get(LangKeys.MSG_GENERIC_ERR, "An error occurred: {}")
+            
+            QMessageBox.critical(dialog, title, body_fmt.format(str(e)))
         
     
 
