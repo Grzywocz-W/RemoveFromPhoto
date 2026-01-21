@@ -46,6 +46,7 @@ class RoundedButton(QPushButton):
 def setup_ui(self):
     toolbar = QToolBar()
     toolbar.setMovable(False)#nie chcemy aby ruszać nim
+    lang = getattr(self, 'lang_data', None) #jezyk
     #### PODSTAWOWE
 ##    toolbar.setStyleSheet(f"""
 ##        QToolBar {{
@@ -183,7 +184,9 @@ def setup_ui(self):
     toolbar.addWidget(self.fill_combo)
     toolbar.addSeparator()
 
+
     #===BUTTONY ===#
+
 ##    actions = [
 ##        ("Otwórz", self.open_image),
 ##        ("Usuń i wypełnij", self.erase_selection),
@@ -200,6 +203,8 @@ def setup_ui(self):
 
     
     self.btn_open = RoundedButton("Otwórz")
+    text_open = lang[LangKeys.BTN_OPEN].strip() if lang else "Otwórz"
+    self.btn_open.setToolTip(f"{text_open} (Ctrl+O)")
     self.btn_open.clicked.connect(self.open_image)
     toolbar.addWidget(self.btn_open)
 
@@ -278,7 +283,7 @@ def setup_ui(self):
     brush_layout.setContentsMargins(0, 0, 0, 0)
     brush_layout.setAlignment(Qt.AlignCenter)
 
-    lang = getattr(self, 'lang_data', None)
+
     
     self.brush_label = QLabel(lang[LangKeys.LBL_BRUSH_NAME].strip() if lang else "Pędzel")
     self.brush_label.setStyleSheet(label_style)
