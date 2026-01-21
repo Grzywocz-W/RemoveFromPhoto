@@ -209,6 +209,8 @@ def setup_ui(self):
     toolbar.addWidget(self.btn_open)
 
     self.btn_erase = RoundedButton("Usuń i wypełnij")
+    text_erase = lang[LangKeys.BTN_ERASE].strip() if lang else "Usuń i wypełnij"
+    self.btn_erase.setToolTip(f"{text_erase} (Ctrl+E)")
     self.btn_erase.clicked.connect(self.erase_selection)
     toolbar.addWidget(self.btn_erase)
 
@@ -227,6 +229,7 @@ def setup_ui(self):
     self.btn_settings = RoundedButton("Ustawienia")
     self.btn_settings.clicked.connect(self.open_settings)
     toolbar.addWidget(self.btn_settings)
+
 
 ##    #===SUWAK PĘDZLNA===#
 ##    brush_container = QWidget()
