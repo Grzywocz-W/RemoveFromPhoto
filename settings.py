@@ -246,7 +246,7 @@ def open_settings(self):
     if index >= 0:
         self.settings_lang_combo.setCurrentIndex(index)
 
-    self.settings_lang_combo.currentIndexChanged.connect(lambda: change_language_on_selection(self))
+    self.settings_lang_combo.currentIndexChanged.connect(lambda: change_language_on_selection(self, dialog))
 
     
     
@@ -255,18 +255,26 @@ def open_settings(self):
     
     main_layout.addWidget(lang_group)
 
+
+    #  Tworzymy grupę i przypisujemy ją do dialogu (dla odświeżania języka)
     widget = QGroupBox(lang[LangKeys.GRP_SD_SETTINGS].strip())
+    dialog.group_sd = widget
+
+    #Tworzymy układ (form) ZANIM go użyjemy
     form = QFormLayout(widget)
     form.setContentsMargins(10, 10, 10, 10)
 
-    
-    #Prompt i Negative Prompt
     default_prompt_text = "remove object, fill with natural background"
     default_neg_text = "low quality, blurry, artifacts, text, watermark"
+
+    #Tworzymy Prompt - etykietę przypisujemy do dialogu, a potem dodajemy do form
+    dialog.lbl_prompt = QLabel(lang[LangKeys.LBL_PROMPT].strip())
     self.prompt_edit = QLineEdit(getattr(self, 'saved_prompt', default_prompt_text))
-    form.addRow(lang[LangKeys.LBL_PROMPT].strip(), self.prompt_edit)
+    form.addRow(dialog.lbl_prompt, self.prompt_edit)
+
+    dialog.lbl_neg_prompt = QLabel(lang[LangKeys.LBL_NEG_PROMPT].strip())
     self.neg_edit = QLineEdit(getattr(self, 'saved_negative_prompt', default_neg_text))
-    form.addRow(lang[LangKeys.LBL_NEG_PROMPT].strip(), self.neg_edit)
+    form.addRow(dialog.lbl_neg_prompt, self.neg_edit)
     
 
     #------Parametry Stable Diffusion----#
@@ -610,6 +618,7 @@ def open_settings(self):
     layout.addWidget(scroll)
     btn_layout = QHBoxLayout()
     save_btn = QPushButton(lang[LangKeys.BTN_SAVE_SETTINGS].strip())
+    dialog.btn_save_sets = save_btn
     save_btn.clicked.connect(lambda: save_settings(self, dialog))
     btn_layout.addWidget(save_btn)
     layout.addLayout(btn_layout)
@@ -700,21 +709,21 @@ def load_language_files(combo_box):
 
 
 
-def change_language_on_selection(main_window):
+def change_language_on_selection(main_window, dialog): # Dodaj parametr dialog
     selected = main_window.settings_lang_combo.currentData()
     if not selected:
         return
-
-    #debbuging
     try:
-        #print(f"Wybrano język: {selected}")
-            
+
         file_configurator.language_version(main_window, selected)
-            
+        # Wywołujemy odświeżanie tekstów w oknie ustawień:
+        refresh_settings_dialog_text(main_window, dialog)
         main_window.repaint()
-        #dialog.repaint()
+
     except Exception as e:
-        print(f"Error: {e}. Check language packs")
+        print(f"Error: {e}, check language packs.")
+
+
 
 def logic_connect_to_sd(main_window, dialog, url_edit, combo_model, combo_control, combo_prep):
     lang = getattr(main_window, 'lang_data', {})
@@ -758,6 +767,38 @@ def logic_connect_to_sd(main_window, dialog, url_edit, combo_model, combo_contro
             body_fmt = lang.get(LangKeys.MSG_GENERIC_ERR, "An error occurred: {}")
             
             QMessageBox.critical(dialog, title, body_fmt.format(str(e)))
-        
-    
 
+
+
+# Aktualizuje język w oknie settings po zmianie jezyka
+def refresh_settings_dialog_text(main_window, dialog):
+    lang = getattr(main_window, 'lang_data', None)
+    if not lang: return
+
+    # Tytuł okna i Grupy
+    dialog.setWindowTitle(lang[LangKeys.SETTINGS_TITLE].strip())
+    if hasattr(dialog, 'group_sd'): dialog.group_sd.setTitle(lang[LangKeys.GRP_SD_SETTINGS].strip())
+    if hasattr(dialog, 'sd_params_group'): dialog.sd_params_group.setTitle(lang[LangKeys.GRP_SD_PARAMS].strip())
+    if hasattr(dialog, 'seed_group'): dialog.seed_group.setTitle(lang[LangKeys.GRP_SEED].strip())
+    if hasattr(dialog, 'model_group'): dialog.model_group.setTitle(lang[LangKeys.GRP_MODELS].strip())
+    if hasattr(dialog, 'cn_adv_group'): dialog.cn_adv_group.setTitle(lang[LangKeys.GRP_CN_ADV].strip())
+    if hasattr(dialog, 'other_group'): dialog.other_group.setTitle(lang[LangKeys.GRP_OTHER].strip())
+    if hasattr(dialog, 'connect_group'): dialog.connect_group.setTitle(lang[LangKeys.GRP_CONNECT].strip())
+
+    # Etykiety (Labels) - przykłady dla kluczowych elementów
+    if hasattr(dialog, 'lbl_prompt'): dialog.lbl_prompt.setText(lang[LangKeys.LBL_PROMPT].strip())
+    if hasattr(dialog, 'lbl_neg_prompt'): dialog.lbl_neg_prompt.setText(lang[LangKeys.LBL_NEG_PROMPT].strip())
+    if hasattr(dialog, 'lbl_steps'): dialog.lbl_steps.setText(lang[LangKeys.LBL_STEPS].strip())
+    if hasattr(dialog, 'lbl_denoise'): dialog.lbl_denoise.setText(lang[LangKeys.LBL_DENOISING].strip())
+    if hasattr(dialog, 'lbl_cfg'): dialog.lbl_cfg.setText(lang[LangKeys.LBL_CFG].strip())
+    if hasattr(dialog, 'lbl_mode'): dialog.lbl_mode.setText(lang[LangKeys.LBL_CTRL_MODE].strip())
+    if hasattr(dialog, 'lbl_resize'): dialog.lbl_resize.setText(lang[LangKeys.LBL_RESIZE_MODE].strip())
+
+    # Przyciski
+    if hasattr(dialog, 'btn_save_sets'): dialog.btn_save_sets.setText(lang[LangKeys.BTN_SAVE_SETTINGS].strip())
+    if hasattr(dialog, 'btn_connect'): dialog.btn_connect.setText(lang[LangKeys.BTN_CONNECT].strip())
+
+    # RadioButtony
+    if hasattr(dialog, 'rb_balanced'): dialog.rb_balanced.setText(lang[LangKeys.RB_BALANCED].strip())
+    if hasattr(dialog, 'rb_prompt'): dialog.rb_prompt.setText(lang[LangKeys.RB_PROMPT_IMP].strip())
+    if hasattr(dialog, 'rb_cn'): dialog.rb_cn.setText(lang[LangKeys.RB_CN_IMP].strip())
