@@ -180,7 +180,7 @@ def language_version(window,file = "ENG_RFP.txt"):
 
 
 class conf_sett(Enum):
-    first_lauch = 0
+    first_launch = 0
     url = 1
     tool = 2
     inpaint_method = 3
