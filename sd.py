@@ -190,7 +190,7 @@ def sd_inpaint_with_controlnet(window, image_bytes: bytes = None, mask_bytes: by
             if lang:
                 QMessageBox.critical(window, lang[LangKeys.MSG_SD_ERR_TITLE].strip(), lang[LangKeys.MSG_NO_RESULT].strip())
             else:
-                QMessageBox.critical(window, "Błąd", "Brak wyniku z SD API.")
+                QMessageBox.critical(window, "Error", "Brak wyniku z SD API.")
 
     except ConnectionError as e:
         lang = getattr(window, 'lang_data', None)
@@ -254,11 +254,6 @@ class SDClient:
             return ['inpaint_only', 'inpaint_only+lama', 'none']
 
     def inpaint_bytes(self, image_bytes: bytes, mask_bytes: bytes, **kwargs) -> Image:
-        """Metoda uruchamiająca inpainting na podstawie surowych bajtów obrazu i maski. Zwraca obiekt PIL.Image (RGB).
-
-        Parametry kwargs mogą nadpisywać wartości w payload (steps, denoising_strength, prompt itp.).
-        Metoda buduje payload podobny do sd_inpaint_with_controlnet, ale używa dostarczonych bajtów jako init/mask.
-        """
         if image_bytes is None or mask_bytes is None:
             raise ValueError("image_bytes and mask_bytes are required")
 
@@ -279,7 +274,7 @@ class SDClient:
             "height": kwargs.get('height', None),
         }
 
-        #Jeśli width/height nie podane, spróbuj odczytać z bajtów obrazu
+        #Jeśli width/height nie podane, spróbuje odczytać z bajtów obrazu
         if payload['width'] is None or payload['height'] is None:
             try:
                 tmp = Image.open(io.BytesIO(image_bytes))
