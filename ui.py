@@ -201,22 +201,27 @@ def setup_ui(self):
 ##        toolbar.addWidget(btn)
 
 
-    
+    # Przycisk Otwórz (Ctrl+O)
     self.btn_open = RoundedButton("Otwórz")
     text_open = lang[LangKeys.BTN_OPEN].strip() if lang else "Otwórz"
     self.btn_open.setToolTip(f"{text_open} (Ctrl+O)")
     self.btn_open.clicked.connect(self.open_image)
     toolbar.addWidget(self.btn_open)
 
+    # Przycisk Usuń i wypełnij (Ctrl+E)
     self.btn_erase = RoundedButton("Usuń i wypełnij")
     text_erase = lang[LangKeys.BTN_ERASE].strip() if lang else "Usuń i wypełnij"
     self.btn_erase.setToolTip(f"{text_erase} (Ctrl+E)")
     self.btn_erase.clicked.connect(self.erase_selection)
     toolbar.addWidget(self.btn_erase)
 
+    # Przycisk Zapisz (Ctrl+S)
     self.btn_save = RoundedButton("Zapisz")
+    text_save = lang[LangKeys.BTN_SAVE].strip() if lang else "Zapisz"
+    self.btn_save.setToolTip(f"{text_save} (Ctrl+S)")
     self.btn_save.clicked.connect(self.save_image)
     toolbar.addWidget(self.btn_save)
+
 
     self.btn_reset = RoundedButton("Reset")
     self.btn_reset.clicked.connect(self.reset_selection)
@@ -229,6 +234,7 @@ def setup_ui(self):
     self.btn_settings = RoundedButton("Ustawienia")
     self.btn_settings.clicked.connect(self.open_settings)
     toolbar.addWidget(self.btn_settings)
+
 
 
 ##    #===SUWAK PĘDZLNA===#
