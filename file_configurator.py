@@ -8,9 +8,8 @@ def load_from_file(window):
         return
     
     try:
-        file = open(config_file, "r", encoding="utf-8")
-        lines = file.readlines()
-        file.close()
+        with open(config_file, "r", encoding="utf-8") as file:
+            lines = file.readlines()
        
         
         settings = []
@@ -115,10 +114,8 @@ def save_config(window):
     
     
     print(dzejson)
-    save = open(config_file,"w",encoding="utf-8")
-    save.write(dzejson)
-
-    save.close()
+    with open(config_file, "w", encoding="utf-8") as save:
+        save.write(dzejson)
 
 
 def language_version(window,file = "ENG_RFP.txt"):
@@ -131,11 +128,8 @@ def language_version(window,file = "ENG_RFP.txt"):
     
     file =  f"Language/{file}"
 
-    
-
-    l_file = open(file,'r',encoding="utf-8")
-    lang = l_file.readlines()
-    l_file.close()
+    with open(file, 'r', encoding="utf-8") as l_file:
+        lang = l_file.readlines()
 
     try:
         if len(lang) >= 92:#75 to długość tego pliku. Jak coś dodajecie to zmieńcie wartość

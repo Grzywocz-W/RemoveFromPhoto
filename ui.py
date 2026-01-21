@@ -47,6 +47,7 @@ def setup_ui(self):
     toolbar = QToolBar()
     toolbar.setMovable(False)#nie chcemy aby ruszać nim
     lang = getattr(self, 'lang_data', None) #jezyk
+
     #### PODSTAWOWE
 ##    toolbar.setStyleSheet(f"""
 ##        QToolBar {{
@@ -100,6 +101,8 @@ def setup_ui(self):
     self.tool_label = QLabel("Narzędzie:") 
     self.tool_label.setStyleSheet(label_style)
     toolbar.addWidget(self.tool_label)
+
+
     #===COMBOBOX Z WYBOREM===#
     self.tool_combo = QComboBox()
     self.tool_combo.addItem("Lasso", 0)
@@ -135,6 +138,7 @@ def setup_ui(self):
             border: 1px solid #555555;
         }
     """)
+
     self.tool_combo.currentIndexChanged.connect(self.on_tool_changed)
     toolbar.addWidget(self.tool_combo)
     toolbar.addSeparator()
@@ -185,6 +189,7 @@ def setup_ui(self):
     toolbar.addSeparator()
 
 
+
     #===BUTTONY ===#
 
 ##    actions = [
@@ -199,6 +204,7 @@ def setup_ui(self):
 ##        btn = RoundedButton(text)
 ##        btn.clicked.connect(func)
 ##        toolbar.addWidget(btn)
+
 
 
     # Przycisk Otwórz (Ctrl+O)
@@ -222,18 +228,28 @@ def setup_ui(self):
     self.btn_save.clicked.connect(self.save_image)
     toolbar.addWidget(self.btn_save)
 
-
+    # Przycisk Reset (Ctrl+R)
     self.btn_reset = RoundedButton("Reset")
+    text_reset = lang[LangKeys.BTN_RESET].strip() if lang else "Reset"
+    self.btn_reset.setToolTip(f"{text_reset} (Ctrl+R)")
     self.btn_reset.clicked.connect(self.reset_selection)
     toolbar.addWidget(self.btn_reset)
 
+    # Przycisk Cofnij (Ctrl+Z)
     self.btn_undo = RoundedButton("Cofnij")
+    text_undo = lang[LangKeys.BTN_UNDO].strip() if lang else "Cofnij"
+    self.btn_undo.setToolTip(f"{text_undo} (Ctrl+Z)")
     self.btn_undo.clicked.connect(self.undo)
     toolbar.addWidget(self.btn_undo)
 
+    # Przycisk Ustawienia (brak skrótu w shortcuts.py, dodajemy sam opis)
     self.btn_settings = RoundedButton("Ustawienia")
+    text_settings = lang[LangKeys.BTN_SETTINGS].strip() if lang else "Ustawienia"
+    self.btn_settings.setToolTip(text_settings)
     self.btn_settings.clicked.connect(self.open_settings)
     toolbar.addWidget(self.btn_settings)
+
+
 
 
 
@@ -436,6 +452,8 @@ def setup_ui(self):
     self.status_message = QLabel("")
     self.status_message.setStyleSheet("color: white; font-weight: bold;")
     toolbar.addWidget(self.status_message)
+
+
 
 
     #===CANVA===#
