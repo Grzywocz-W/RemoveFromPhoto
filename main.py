@@ -10,7 +10,7 @@ import helpers
 import settings
 from shortcuts import SHORTCUTS
 from mouse import mousePressEvent, mouseMoveEvent, mouseReleaseEvent, enterEvent_logic, leaveEvent_logic
-from ui import setup_ui, RoundedButton
+from ui import setup_ui
 import file_configurator
 import first_launch
 

@@ -243,6 +243,8 @@ def set_image_and_mask_from_bytes(self, image_bytes: bytes, mask_bytes: bytes):
     set_image_from_bytes(self, image_bytes)
     set_mask_from_bytes(self, mask_bytes)
 
+
+
 #błąd, w ustawieniach, trzeba zaznaczyć używaj timestamp lub coś podobnego. Poprawione i działą poprawnie
 def save_image(self):
     lang = getattr(self, 'lang_data', None)
@@ -258,8 +260,11 @@ def save_image(self):
         self.image.save(path)
         QMessageBox.information(self, "Zapisano", lang[LangKeys.MSG_SAVED_PATH].strip().format(path) if lang else f"Zapisano: {path}")
         
+
+
 def erase_selection(self):
     from PyQt5.QtWidgets import QMessageBox, QApplication
+
     lang = getattr(self, 'lang_data', None)
     if not self.image:
         QMessageBox.warning(self, "Błąd", lang[LangKeys.MSG_WARN_LOAD_IMG].strip() if lang else "Wczytaj obraz najpierw.")
@@ -277,6 +282,7 @@ def erase_selection(self):
     QApplication.processEvents()
     
     #===LOGIKA INPAINTNGU===#
+    self.btn_erase.setEnabled(False)
     if self.fill_combo.currentData() == 2:  # SD + ControlNet
         if self.sd_connected:
             import sd
@@ -288,11 +294,16 @@ def erase_selection(self):
             return
     else:
         _local_inpaint_and_update(self)
+
+    self.btn_erase.setEnabled(True)
     
     #===ZMIANA STATUSU===#
     self.status_label.setStyleSheet(f"background: {COLORS['status_done']}; border-radius: 10px;")
     self.status_message.setText(lang[LangKeys.STATUS_READY].strip() if lang else "✓ Gotowy")
-    
+
+
+
+
 def _local_inpaint_and_update(self):
     id_ = self.fill_combo.currentData() 
     if id_ == 0:
