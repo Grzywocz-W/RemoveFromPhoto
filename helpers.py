@@ -281,7 +281,6 @@ def erase_selection(self):
     QApplication.processEvents()
     
     #===LOGIKA INPAINTNGU===#
-    self.btn_erase.setEnabled(False)
     if self.fill_combo.currentData() == 2:  # SD + ControlNet
         if self.sd_connected:
             import sd
@@ -294,7 +293,6 @@ def erase_selection(self):
     else:
         _local_inpaint_and_update(self)
 
-    self.btn_erase.setEnabled(True)
     
     #===ZMIANA STATUSU===#
     self.status_label.setStyleSheet(f"background: {COLORS['status_done']}; border-radius: 10px;")
