@@ -210,42 +210,42 @@ def setup_ui(self):
     # Przycisk Otwórz (Ctrl+O)
     self.btn_open = RoundedButton("Otwórz")
     text_open = lang[LangKeys.BTN_OPEN].strip() if lang else "Otwórz"
-    self.btn_open.setToolTip(f"{text_open} (Ctrl+O)")
+    self.btn_open.setToolTip(f"Ctrl+O)")
     self.btn_open.clicked.connect(self.open_image)
     toolbar.addWidget(self.btn_open)
 
     # Przycisk Usuń i wypełnij (Ctrl+E)
     self.btn_erase = RoundedButton("Usuń i wypełnij")
     text_erase = lang[LangKeys.BTN_ERASE].strip() if lang else "Usuń i wypełnij"
-    self.btn_erase.setToolTip(f"{text_erase} (Ctrl+E)")
+    self.btn_erase.setToolTip(f"(Ctrl+E)")
     self.btn_erase.clicked.connect(self.erase_selection)
     toolbar.addWidget(self.btn_erase)
 
     # Przycisk Zapisz (Ctrl+S)
     self.btn_save = RoundedButton("Zapisz")
     text_save = lang[LangKeys.BTN_SAVE].strip() if lang else "Zapisz"
-    self.btn_save.setToolTip(f"{text_save} (Ctrl+S)")
+    self.btn_save.setToolTip(f"Ctrl+S)")
     self.btn_save.clicked.connect(self.save_image)
     toolbar.addWidget(self.btn_save)
 
     # Przycisk Reset (Ctrl+R)
     self.btn_reset = RoundedButton("Reset")
     text_reset = lang[LangKeys.BTN_RESET].strip() if lang else "Reset"
-    self.btn_reset.setToolTip(f"{text_reset} (Ctrl+R)")
+    self.btn_reset.setToolTip(f"(Ctrl+R)")
     self.btn_reset.clicked.connect(self.reset_selection)
     toolbar.addWidget(self.btn_reset)
 
     # Przycisk Cofnij (Ctrl+Z)
     self.btn_undo = RoundedButton("Cofnij")
     text_undo = lang[LangKeys.BTN_UNDO].strip() if lang else "Cofnij"
-    self.btn_undo.setToolTip(f"{text_undo} (Ctrl+Z)")
+    self.btn_undo.setToolTip(f"(Ctrl+Z)")
     self.btn_undo.clicked.connect(self.undo)
     toolbar.addWidget(self.btn_undo)
 
     # Przycisk Ustawienia (brak skrótu w shortcuts.py, dodajemy sam opis)
     self.btn_settings = RoundedButton("Ustawienia")
     text_settings = lang[LangKeys.BTN_SETTINGS].strip() if lang else "Ustawienia"
-    self.btn_settings.setToolTip(text_settings)
+    self.btn_settings.setToolTip('⚙️')
     self.btn_settings.clicked.connect(self.open_settings)
     toolbar.addWidget(self.btn_settings)
 
